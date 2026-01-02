@@ -8,20 +8,29 @@ interface CodeOutputProps {
   alt: string;
 }
 
+const PRODUCTION_BASE_URL = 'https://devcard.pavegy.workers.dev';
+
 export function CodeOutput({ url, alt }: CodeOutputProps) {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('markdown');
 
+  // Convert relative URL to absolute production URL for code output
+  const getFullUrl = (relativeUrl: string) => {
+    if (relativeUrl.startsWith('http')) return relativeUrl;
+    return `${PRODUCTION_BASE_URL}${relativeUrl}`;
+  };
+
   const getCode = (format: string) => {
+    const fullUrl = getFullUrl(url);
     switch (format) {
       case 'markdown':
-        return `![${alt}](${url})`;
+        return `![${alt}](${fullUrl})`;
       case 'html':
-        return `<img src="${url}" alt="${alt}" />`;
+        return `<img src="${fullUrl}" alt="${alt}" />`;
       case 'url':
-        return url;
+        return fullUrl;
       default:
-        return url;
+        return fullUrl;
     }
   };
 
