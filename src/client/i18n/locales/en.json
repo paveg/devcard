@@ -2,7 +2,14 @@
   "nav": {
     "stats": "Stats",
     "languages": "Languages",
-    "pin": "Pin"
+    "pin": "Pin",
+    "main": "Main navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "mobileMenu": "Mobile navigation menu"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to main content"
   },
   "home": {
     "title": "Beautiful GitHub Stats for Your README",
@@ -12,7 +19,8 @@
     "preview": {
       "empty": "Enter a GitHub username to preview",
       "loading": "Loading...",
-      "error": "Failed to load stats. Check username or try again."
+      "error": "Failed to load stats. Check username or try again.",
+      "alt": "GitHub Stats Preview for {{username}}"
     },
     "customize": {
       "stats": "Customize Stats",
@@ -111,6 +119,13 @@
   },
   "footer": {
     "madeBy": "Made with care by",
-    "viewOnGitHub": "View on GitHub"
+    "viewOnGitHub": "View on GitHub",
+    "love": "love",
+    "privacy": "Privacy"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "back": "Back to Home",
+    "lastUpdated": "Last updated"
   }
 }

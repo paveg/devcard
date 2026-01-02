@@ -14,6 +14,7 @@ const LanguagesGenerator = lazy(() =>
 const PinGenerator = lazy(() =>
   import('./pages/PinGenerator').then((m) => ({ default: m.PinGenerator }))
 );
+const Privacy = lazy(() => import('./pages/Privacy').then((m) => ({ default: m.Privacy })));
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
           element={
             <Suspense fallback={<PageLoader />}>
               <PinGenerator />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/privacy"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <Privacy />
             </Suspense>
           }
         />

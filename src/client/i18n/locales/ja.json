@@ -2,7 +2,14 @@
   "nav": {
     "stats": "統計",
     "languages": "言語",
-    "pin": "ピン"
+    "pin": "ピン",
+    "main": "メインナビゲーション",
+    "openMenu": "メニューを開く",
+    "closeMenu": "メニューを閉じる",
+    "mobileMenu": "モバイルナビゲーションメニュー"
+  },
+  "accessibility": {
+    "skipToContent": "メインコンテンツへスキップ"
   },
   "home": {
     "title": "美しいGitHub統計カード",
@@ -12,7 +19,8 @@
     "preview": {
       "empty": "ユーザー名を入力してプレビュー",
       "loading": "読み込み中...",
-      "error": "読み込み失敗。ユーザー名を確認。"
+      "error": "読み込み失敗。ユーザー名を確認。",
+      "alt": "{{username}}のGitHub統計プレビュー"
     },
     "customize": {
       "stats": "統計をカスタマイズ",
@@ -111,6 +119,13 @@
   },
   "footer": {
     "madeBy": "作成:",
-    "viewOnGitHub": "GitHubで見る"
+    "viewOnGitHub": "GitHubで見る",
+    "love": "愛",
+    "privacy": "プライバシー"
+  },
+  "privacy": {
+    "title": "プライバシーポリシー",
+    "back": "ホームに戻る",
+    "lastUpdated": "最終更新日"
   }
 }
