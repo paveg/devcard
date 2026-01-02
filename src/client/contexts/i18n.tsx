@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, type ReactNode, useContext, useState } from 'react';
 
 export type Locale = 'en' | 'ja';
 
@@ -11,7 +11,8 @@ const translations = {
 
     // Home
     'home.title': 'Beautiful GitHub Stats for Your README',
-    'home.subtitle': 'Minimal, modern, and customizable GitHub statistics cards. Showcase your contributions with style.',
+    'home.subtitle':
+      'Minimal, modern, and customizable GitHub statistics cards. Showcase your contributions with style.',
     'home.placeholder': 'GitHub username',
     'home.generate': 'Generate',
     'home.preview.empty': 'Enter a GitHub username to preview',
@@ -25,13 +26,16 @@ const translations = {
     'features.title': 'Features',
     'features.subtitle': 'Everything you need to showcase your GitHub profile',
     'features.themes.title': 'Beautiful Themes',
-    'features.themes.desc': 'Choose from multiple themes or customize colors to match your README aesthetic.',
+    'features.themes.desc':
+      'Choose from multiple themes or customize colors to match your README aesthetic.',
     'features.i18n.title': 'i18n Support',
     'features.i18n.desc': 'Display your stats in English or Japanese. More languages coming soon.',
     'features.fast.title': 'Lightning Fast',
-    'features.fast.desc': 'Powered by Cloudflare Workers with intelligent caching for instant loading.',
+    'features.fast.desc':
+      'Powered by Cloudflare Workers with intelligent caching for instant loading.',
     'features.cards.title': 'Multiple Card Types',
-    'features.cards.desc': 'Stats card, language breakdown, and repository pins - all in one service.',
+    'features.cards.desc':
+      'Stats card, language breakdown, and repository pins - all in one service.',
     'features.design.title': 'Minimal Design',
     'features.design.desc': 'Clean, modern SVG cards that look great in any README.',
     'features.privacy.title': 'Privacy First',
@@ -69,7 +73,8 @@ const translations = {
 
     // Languages page
     'languages.title': 'Top Languages Generator',
-    'languages.subtitle': 'Display the programming languages you use most across your repositories.',
+    'languages.subtitle':
+      'Display the programming languages you use most across your repositories.',
     'languages.layout': 'Layout',
     'languages.langsCount': 'Languages Count',
     'languages.hideBorder': 'Hide Border',
@@ -110,7 +115,8 @@ const translations = {
 
     // Home
     'home.title': 'README用の美しいGitHub統計',
-    'home.subtitle': 'ミニマル、モダン、カスタマイズ可能なGitHub統計カード。あなたの貢献をスタイリッシュに紹介。',
+    'home.subtitle':
+      'ミニマル、モダン、カスタマイズ可能なGitHub統計カード。あなたの貢献をスタイリッシュに紹介。',
     'home.placeholder': 'GitHubユーザー名',
     'home.generate': '生成',
     'home.preview.empty': 'プレビューするにはGitHubユーザー名を入力',
@@ -234,11 +240,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     return translations[locale][key] || key;
   };
 
-  return (
-    <I18nContext.Provider value={{ locale, setLocale, t }}>
-      {children}
-    </I18nContext.Provider>
-  );
+  return <I18nContext.Provider value={{ locale, setLocale, t }}>{children}</I18nContext.Provider>;
 }
 
 export function useI18n() {

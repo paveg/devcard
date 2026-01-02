@@ -1,6 +1,6 @@
-import { useState, memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ImageIcon } from 'lucide-react';
+import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CodeOutput } from './CodeOutput';
@@ -54,7 +54,7 @@ export const PreviewPanel = memo(function PreviewPanel({ url, alt }: PreviewPane
   });
 
   // Reset state when URL changes (React's recommended pattern for derived state)
-  const imageState = stateForUrl.url === url ? stateForUrl.state : (url ? 'loading' : 'idle');
+  const imageState = stateForUrl.url === url ? stateForUrl.state : url ? 'loading' : 'idle';
 
   const handleStateChange = (state: ImageState) => {
     setStateForUrl({ url, state });
@@ -78,9 +78,7 @@ export const PreviewPanel = memo(function PreviewPanel({ url, alt }: PreviewPane
           {showEmpty && (
             <div className="flex flex-col items-center gap-3 text-muted-foreground">
               <ImageIcon className="h-10 w-10 opacity-50" />
-              <p className="text-center text-sm">
-                {t('generator.previewEmpty')}
-              </p>
+              <p className="text-center text-sm">{t('generator.previewEmpty')}</p>
             </div>
           )}
           {showLoading && (
@@ -95,24 +93,15 @@ export const PreviewPanel = memo(function PreviewPanel({ url, alt }: PreviewPane
             </div>
           )}
           {showError && (
-            <p className="text-center text-sm text-destructive">
-              {t('generator.previewError')}
-            </p>
+            <p className="text-center text-sm text-destructive">{t('generator.previewError')}</p>
           )}
           {url && (
             // key={url} resets the ImagePreview component when URL changes
-            <ImagePreview
-              key={url}
-              url={url}
-              alt={alt}
-              onStateChange={handleStateChange}
-            />
+            <ImagePreview key={url} url={url} alt={alt} onStateChange={handleStateChange} />
           )}
         </div>
 
-        {showImage && (
-          <CodeOutput url={url} alt={alt} />
-        )}
+        {showImage && <CodeOutput url={url} alt={alt} />}
       </CardContent>
     </Card>
   );

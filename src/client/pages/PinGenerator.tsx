@@ -1,19 +1,15 @@
-import { useState, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ChevronDown, Pin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
-import { ThemeSelect } from '@/components/generators/ThemeSelect';
+import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { LocaleSelect } from '@/components/generators/LocaleSelect';
 import { PreviewPanel } from '@/components/generators/PreviewPanel';
+import { ThemeSelect } from '@/components/generators/ThemeSelect';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useUsername } from '@/contexts/username';
 
 interface FormState {
@@ -41,12 +37,9 @@ export function PinGenerator() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
-  const updateForm = useCallback(
-    <K extends keyof FormState>(key: K, value: FormState[K]) => {
-      setForm((prev) => ({ ...prev, [key]: value }));
-    },
-    []
-  );
+  const updateForm = useCallback(<K extends keyof FormState>(key: K, value: FormState[K]) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
   const buildUrl = useCallback(() => {
     if (!username.trim() || !form.repo.trim()) return null;
@@ -78,13 +71,9 @@ export function PinGenerator() {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
             <Pin className="h-5 w-5 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            {t('pin.title')}
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t('pin.title')}</h1>
         </div>
-        <p className="max-w-2xl text-pretty text-muted-foreground">
-          {t('pin.subtitle')}
-        </p>
+        <p className="max-w-2xl text-pretty text-muted-foreground">{t('pin.subtitle')}</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
@@ -116,15 +105,9 @@ export function PinGenerator() {
                 />
               </div>
 
-              <ThemeSelect
-                value={form.theme}
-                onValueChange={(v) => updateForm('theme', v)}
-              />
+              <ThemeSelect value={form.theme} onValueChange={(v) => updateForm('theme', v)} />
 
-              <LocaleSelect
-                value={form.locale}
-                onValueChange={(v) => updateForm('locale', v)}
-              />
+              <LocaleSelect value={form.locale} onValueChange={(v) => updateForm('locale', v)} />
 
               <div className="space-y-2">
                 <Label>{t('generator.options')}</Label>
@@ -138,9 +121,7 @@ export function PinGenerator() {
                       <Checkbox
                         id={key}
                         checked={form[key]}
-                        onCheckedChange={(checked) =>
-                          updateForm(key, checked === true)
-                        }
+                        onCheckedChange={(checked) => updateForm(key, checked === true)}
                       />
                       <Label htmlFor={key} className="text-sm font-normal">
                         {label}
@@ -159,9 +140,7 @@ export function PinGenerator() {
                   >
                     {t('generator.advanced')}
                     <ChevronDown
-                      className={`h-4 w-4 transition-transform ${
-                        advancedOpen ? 'rotate-180' : ''
-                      }`}
+                      className={`h-4 w-4 transition-transform ${advancedOpen ? 'rotate-180' : ''}`}
                     />
                   </Button>
                 </CollapsibleTrigger>
@@ -175,13 +154,9 @@ export function PinGenerator() {
                       max="5"
                       placeholder="2"
                       value={form.descriptionLinesCount}
-                      onChange={(e) =>
-                        updateForm('descriptionLinesCount', e.target.value)
-                      }
+                      onChange={(e) => updateForm('descriptionLinesCount', e.target.value)}
                     />
-                    <p className="text-xs text-muted-foreground">
-                      {t('pin.descriptionLinesHint')}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{t('pin.descriptionLinesHint')}</p>
                   </div>
                 </CollapsibleContent>
               </Collapsible>
@@ -193,10 +168,7 @@ export function PinGenerator() {
           </CardContent>
         </Card>
 
-        <PreviewPanel
-          url={previewUrl}
-          alt={form.repo}
-        />
+        <PreviewPanel url={previewUrl} alt={form.repo} />
       </div>
     </div>
   );
