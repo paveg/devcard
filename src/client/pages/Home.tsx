@@ -53,12 +53,26 @@ export function Home() {
   const [username, setUsername] = useState('paveg');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleGenerate = (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim()) return;
     setLoading(true);
+    setError(false);
+    setImageLoaded(false);
     setPreviewUrl(`/api?username=${username.trim()}`);
+  };
+
+  const handleImageLoad = () => {
+    setLoading(false);
+    setImageLoaded(true);
+  };
+
+  const handleImageError = () => {
+    setLoading(false);
+    setError(true);
   };
 
   return (
@@ -93,18 +107,26 @@ export function Home() {
                   Enter a GitHub username to preview
                 </p>
               )}
+              {previewUrl && loading && (
+                <p className="text-sm text-muted-foreground">Loading...</p>
+              )}
+              {previewUrl && error && (
+                <p className="text-sm text-destructive">
+                  Failed to load stats. Check username or try again.
+                </p>
+              )}
               {previewUrl && (
                 <img
                   src={previewUrl}
                   alt="GitHub Stats Preview"
-                  onLoad={() => setLoading(false)}
-                  onError={() => setLoading(false)}
-                  className={loading ? 'opacity-50' : ''}
+                  onLoad={handleImageLoad}
+                  onError={handleImageError}
+                  className={imageLoaded ? 'max-w-full' : 'hidden'}
                 />
               )}
             </div>
 
-            {previewUrl && (
+            {previewUrl && imageLoaded && (
               <div className="mt-4 flex justify-center gap-2">
                 <Button asChild variant="outline">
                   <Link to="/stats">Customize Stats</Link>
