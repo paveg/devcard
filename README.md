@@ -2,7 +2,7 @@
 
 Minimal, modern GitHub statistics cards for your profile README.
 
-![Stats Card](https://devcard.paveg.workers.dev/api?username=paveg)
+![Stats Card](https://devcard.pavegy.workers.dev/api?username=paveg)
 
 ## Features
 
@@ -19,7 +19,7 @@ Minimal, modern GitHub statistics cards for your profile README.
 Show your GitHub statistics:
 
 ```markdown
-![GitHub Stats](https://devcard.paveg.workers.dev/api?username=YOUR_USERNAME)
+![GitHub Stats](https://devcard.pavegy.workers.dev/api?username=YOUR_USERNAME)
 ```
 
 #### Options
@@ -40,7 +40,7 @@ Show your GitHub statistics:
 Display your most used programming languages:
 
 ```markdown
-![Top Languages](https://devcard.paveg.workers.dev/api/top-langs?username=YOUR_USERNAME)
+![Top Languages](https://devcard.pavegy.workers.dev/api/top-langs?username=YOUR_USERNAME)
 ```
 
 #### Options
@@ -60,7 +60,7 @@ Display your most used programming languages:
 Showcase a specific repository:
 
 ```markdown
-![Repo Card](https://devcard.paveg.workers.dev/api/pin?username=YOUR_USERNAME&repo=REPO_NAME)
+![Repo Card](https://devcard.pavegy.workers.dev/api/pin?username=YOUR_USERNAME&repo=REPO_NAME)
 ```
 
 #### Options
@@ -93,7 +93,7 @@ Available themes:
 Add `locale=ja` to any card URL for Japanese:
 
 ```markdown
-![GitHub Stats](https://devcard.paveg.workers.dev/api?username=YOUR_USERNAME&locale=ja)
+![GitHub Stats](https://devcard.pavegy.workers.dev/api?username=YOUR_USERNAME&locale=ja)
 ```
 
 ## Development
