@@ -1,0 +1,116 @@
+{
+  "nav": {
+    "stats": "統計",
+    "languages": "言語",
+    "pin": "ピン"
+  },
+  "home": {
+    "title": "README用の美しいGitHub統計",
+    "subtitle": "ミニマル、モダン、カスタマイズ可能なGitHub統計カード。あなたの貢献をスタイリッシュに紹介。",
+    "placeholder": "GitHubユーザー名",
+    "generate": "生成",
+    "preview": {
+      "empty": "プレビューするにはGitHubユーザー名を入力",
+      "loading": "読み込み中...",
+      "error": "読み込みに失敗しました。ユーザー名を確認してください。"
+    },
+    "customize": {
+      "stats": "統計をカスタマイズ",
+      "languages": "トップ言語",
+      "pin": "リポジトリピン"
+    }
+  },
+  "features": {
+    "title": "機能",
+    "subtitle": "GitHubプロフィールを彩るすべてが揃っています",
+    "themes": {
+      "title": "美しいテーマ",
+      "desc": "多数のテーマから選択するか、READMEに合わせて色をカスタマイズ。"
+    },
+    "i18n": {
+      "title": "多言語対応",
+      "desc": "統計を日本語または英語で表示。今後も言語追加予定。"
+    },
+    "fast": {
+      "title": "超高速",
+      "desc": "Cloudflare Workersとインテリジェントキャッシュによる瞬時の読み込み。"
+    },
+    "cards": {
+      "title": "複数のカードタイプ",
+      "desc": "統計カード、言語分布、リポジトリピン、すべて1つのサービスで。"
+    },
+    "design": {
+      "title": "ミニマルデザイン",
+      "desc": "どんなREADMEにも映える、クリーンでモダンなSVGカード。"
+    },
+    "privacy": {
+      "title": "プライバシー重視",
+      "desc": "トラッキングなし、クッキーなし。美しい統計だけ。"
+    }
+  },
+  "generator": {
+    "username": "GitHubユーザー名",
+    "usernameRequired": "GitHubユーザー名 *",
+    "repo": "リポジトリ名",
+    "repoRequired": "リポジトリ名 *",
+    "theme": "テーマ",
+    "locale": "カード言語",
+    "options": "オプション",
+    "advanced": "詳細オプション",
+    "generate": "カードを生成",
+    "preview": "プレビュー",
+    "previewEmpty": "詳細を入力してプレビューを生成",
+    "previewLoading": "読み込み中...",
+    "previewError": "読み込みに失敗しました。ユーザー名を確認してください。"
+  },
+  "stats": {
+    "title": "統計カードジェネレーター",
+    "subtitle": "GitHubプロフィールの統計を美しいカードで表示します。",
+    "showIcons": "アイコンを表示",
+    "hideRank": "ランクを非表示",
+    "hideBorder": "枠線を非表示",
+    "hideTitle": "タイトルを非表示",
+    "allCommits": "すべてのコミット",
+    "noAnimation": "アニメーションなし",
+    "customTitle": "カスタムタイトル",
+    "hide": "統計を非表示",
+    "hideHint": "カンマ区切り: stars, commits, prs, issues, contribs",
+    "show": "統計を表示",
+    "showHint": "カンマ区切り: reviews, prs_merged, prs_merged_percentage"
+  },
+  "languages": {
+    "title": "トップ言語ジェネレーター",
+    "subtitle": "リポジトリで最も使用しているプログラミング言語を表示します。",
+    "layout": "レイアウト",
+    "langsCount": "言語数",
+    "hideBorder": "枠線を非表示",
+    "hideTitle": "タイトルを非表示",
+    "hideProgress": "プログレスを非表示",
+    "noAnimation": "アニメーションなし",
+    "customTitle": "カスタムタイトル",
+    "hide": "言語を除外",
+    "hideHint": "除外する言語名をカンマ区切りで",
+    "excludeRepo": "リポジトリを除外",
+    "excludeRepoHint": "除外するリポジトリ名をカンマ区切りで"
+  },
+  "pin": {
+    "title": "リポジトリピンジェネレーター",
+    "subtitle": "美しいピンカードでベストリポジトリをハイライト。",
+    "showOwner": "オーナーを表示",
+    "hideBorder": "枠線を非表示",
+    "noAnimation": "アニメーションなし",
+    "descriptionLines": "説明行数",
+    "descriptionLinesHint": "説明の行数（1-5）"
+  },
+  "code": {
+    "markdown": "Markdown",
+    "html": "HTML",
+    "url": "URL",
+    "copy": "コピー",
+    "copied": "コピー済み"
+  },
+  "footer": {
+    "madeBy": "作成者:",
+    "viewOnGitHub": "GitHubで見る"
+  }
+}

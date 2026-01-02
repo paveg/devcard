@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,9 +14,9 @@ import {
 import { ThemeSelect } from '@/components/generators/ThemeSelect';
 import { LocaleSelect } from '@/components/generators/LocaleSelect';
 import { PreviewPanel } from '@/components/generators/PreviewPanel';
+import { useUsername } from '@/contexts/username';
 
 interface FormState {
-  username: string;
   repo: string;
   theme: string;
   locale: string;
@@ -26,8 +27,9 @@ interface FormState {
 }
 
 export function PinGenerator() {
+  const { t } = useTranslation();
+  const { username, setUsername } = useUsername();
   const [form, setForm] = useState<FormState>({
-    username: '',
     repo: '',
     theme: 'default',
     locale: 'en',
@@ -47,10 +49,10 @@ export function PinGenerator() {
   );
 
   const buildUrl = useCallback(() => {
-    if (!form.username.trim() || !form.repo.trim()) return null;
+    if (!username.trim() || !form.repo.trim()) return null;
 
     const params = new URLSearchParams();
-    params.set('username', form.username.trim());
+    params.set('username', username.trim());
     params.set('repo', form.repo.trim());
 
     if (form.theme && form.theme !== 'default') params.set('theme', form.theme);
@@ -62,7 +64,7 @@ export function PinGenerator() {
       params.set('description_lines_count', form.descriptionLinesCount);
 
     return `/api/pin?${params.toString()}`;
-  }, [form]);
+  }, [form, username]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,32 +74,32 @@ export function PinGenerator() {
   return (
     <div className="container py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">Repository Pin Generator</h1>
+        <h1 className="text-2xl font-bold">{t('pin.title')}</h1>
         <p className="text-muted-foreground">
-          Highlight your best repositories with beautiful pin cards.
+          {t('pin.subtitle')}
         </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Options</CardTitle>
+            <CardTitle className="text-base">{t('generator.options')}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">GitHub Username *</Label>
+                <Label htmlFor="username">{t('generator.usernameRequired')}</Label>
                 <Input
                   id="username"
                   placeholder="octocat"
-                  value={form.username}
-                  onChange={(e) => updateForm('username', e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="repo">Repository Name *</Label>
+                <Label htmlFor="repo">{t('generator.repoRequired')}</Label>
                 <Input
                   id="repo"
                   placeholder="Hello-World"
@@ -118,12 +120,12 @@ export function PinGenerator() {
               />
 
               <div className="space-y-2">
-                <Label>Options</Label>
+                <Label>{t('generator.options')}</Label>
                 <div className="space-y-2">
                   {[
-                    { key: 'showOwner' as const, label: 'Show Owner' },
-                    { key: 'hideBorder' as const, label: 'Hide Border' },
-                    { key: 'disableAnimations' as const, label: 'No Animation' },
+                    { key: 'showOwner' as const, label: t('pin.showOwner') },
+                    { key: 'hideBorder' as const, label: t('pin.hideBorder') },
+                    { key: 'disableAnimations' as const, label: t('pin.noAnimation') },
                   ].map(({ key, label }) => (
                     <div key={key} className="flex items-center gap-2">
                       <Checkbox
@@ -148,7 +150,7 @@ export function PinGenerator() {
                     className="w-full justify-between border-t pt-4"
                     type="button"
                   >
-                    Advanced Options
+                    {t('generator.advanced')}
                     <ChevronDown
                       className={`h-4 w-4 transition-transform ${
                         advancedOpen ? 'rotate-180' : ''
@@ -158,7 +160,7 @@ export function PinGenerator() {
                 </CollapsibleTrigger>
                 <CollapsibleContent className="space-y-4 pt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="descriptionLinesCount">Description Lines</Label>
+                    <Label htmlFor="descriptionLinesCount">{t('pin.descriptionLines')}</Label>
                     <Input
                       id="descriptionLinesCount"
                       type="number"
@@ -171,14 +173,14 @@ export function PinGenerator() {
                       }
                     />
                     <p className="text-xs text-muted-foreground">
-                      Number of lines for description (1-5)
+                      {t('pin.descriptionLinesHint')}
                     </p>
                   </div>
                 </CollapsibleContent>
               </Collapsible>
 
               <Button type="submit" className="w-full">
-                Generate Card
+                {t('generator.generate')}
               </Button>
             </form>
           </CardContent>

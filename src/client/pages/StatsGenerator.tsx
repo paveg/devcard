@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,9 +14,9 @@ import {
 import { ThemeSelect } from '@/components/generators/ThemeSelect';
 import { LocaleSelect } from '@/components/generators/LocaleSelect';
 import { PreviewPanel } from '@/components/generators/PreviewPanel';
+import { useUsername } from '@/contexts/username';
 
 interface FormState {
-  username: string;
   theme: string;
   locale: string;
   showIcons: boolean;
@@ -31,8 +32,9 @@ interface FormState {
 }
 
 export function StatsGenerator() {
+  const { t } = useTranslation();
+  const { username, setUsername } = useUsername();
   const [form, setForm] = useState<FormState>({
-    username: '',
     theme: 'default',
     locale: 'en',
     showIcons: true,
@@ -57,10 +59,10 @@ export function StatsGenerator() {
   );
 
   const buildUrl = useCallback(() => {
-    if (!form.username.trim()) return null;
+    if (!username.trim()) return null;
 
     const params = new URLSearchParams();
-    params.set('username', form.username.trim());
+    params.set('username', username.trim());
 
     if (form.theme && form.theme !== 'default') params.set('theme', form.theme);
     if (form.locale && form.locale !== 'en') params.set('locale', form.locale);
@@ -76,7 +78,7 @@ export function StatsGenerator() {
     if (form.rankIcon) params.set('rank_icon', form.rankIcon);
 
     return `/api?${params.toString()}`;
-  }, [form]);
+  }, [form, username]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,26 +88,26 @@ export function StatsGenerator() {
   return (
     <div className="container py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">Stats Card Generator</h1>
+        <h1 className="text-2xl font-bold">{t('stats.title')}</h1>
         <p className="text-muted-foreground">
-          Display your GitHub profile statistics with a beautiful card.
+          {t('stats.subtitle')}
         </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Options</CardTitle>
+            <CardTitle className="text-base">{t('generator.options')}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">GitHub Username *</Label>
+                <Label htmlFor="username">{t('generator.usernameRequired')}</Label>
                 <Input
                   id="username"
                   placeholder="octocat"
-                  value={form.username}
-                  onChange={(e) => updateForm('username', e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
@@ -121,15 +123,15 @@ export function StatsGenerator() {
               />
 
               <div className="space-y-2">
-                <Label>Options</Label>
+                <Label>{t('generator.options')}</Label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { key: 'showIcons' as const, label: 'Show Icons' },
-                    { key: 'hideRank' as const, label: 'Hide Rank' },
-                    { key: 'hideBorder' as const, label: 'Hide Border' },
-                    { key: 'hideTitle' as const, label: 'Hide Title' },
-                    { key: 'includeAllCommits' as const, label: 'All Commits' },
-                    { key: 'disableAnimations' as const, label: 'No Animation' },
+                    { key: 'showIcons' as const, label: t('stats.showIcons') },
+                    { key: 'hideRank' as const, label: t('stats.hideRank') },
+                    { key: 'hideBorder' as const, label: t('stats.hideBorder') },
+                    { key: 'hideTitle' as const, label: t('stats.hideTitle') },
+                    { key: 'includeAllCommits' as const, label: t('stats.allCommits') },
+                    { key: 'disableAnimations' as const, label: t('stats.noAnimation') },
                   ].map(({ key, label }) => (
                     <div key={key} className="flex items-center gap-2">
                       <Checkbox
@@ -154,7 +156,7 @@ export function StatsGenerator() {
                     className="w-full justify-between border-t pt-4"
                     type="button"
                   >
-                    Advanced Options
+                    {t('generator.advanced')}
                     <ChevronDown
                       className={`h-4 w-4 transition-transform ${
                         advancedOpen ? 'rotate-180' : ''
@@ -164,7 +166,7 @@ export function StatsGenerator() {
                 </CollapsibleTrigger>
                 <CollapsibleContent className="space-y-4 pt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="customTitle">Custom Title</Label>
+                    <Label htmlFor="customTitle">{t('stats.customTitle')}</Label>
                     <Input
                       id="customTitle"
                       placeholder="My GitHub Stats"
@@ -174,7 +176,7 @@ export function StatsGenerator() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="hide">Hide Stats</Label>
+                    <Label htmlFor="hide">{t('stats.hide')}</Label>
                     <Input
                       id="hide"
                       placeholder="stars,commits,prs"
@@ -182,12 +184,12 @@ export function StatsGenerator() {
                       onChange={(e) => updateForm('hide', e.target.value)}
                     />
                     <p className="text-xs text-muted-foreground">
-                      Comma-separated: stars, commits, prs, issues, contribs
+                      {t('stats.hideHint')}
                     </p>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="show">Show Stats</Label>
+                    <Label htmlFor="show">{t('stats.show')}</Label>
                     <Input
                       id="show"
                       placeholder="reviews,prs_merged"
@@ -195,14 +197,14 @@ export function StatsGenerator() {
                       onChange={(e) => updateForm('show', e.target.value)}
                     />
                     <p className="text-xs text-muted-foreground">
-                      Comma-separated: reviews, prs_merged, prs_merged_percentage
+                      {t('stats.showHint')}
                     </p>
                   </div>
                 </CollapsibleContent>
               </Collapsible>
 
               <Button type="submit" className="w-full">
-                Generate Card
+                {t('generator.generate')}
               </Button>
             </form>
           </CardContent>
@@ -210,7 +212,7 @@ export function StatsGenerator() {
 
         <PreviewPanel
           url={previewUrl}
-          alt={`${form.username}'s GitHub Stats`}
+          alt={`${username}'s GitHub Stats`}
         />
       </div>
     </div>

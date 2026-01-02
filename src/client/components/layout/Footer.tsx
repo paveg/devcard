@@ -1,9 +1,13 @@
+import { useTranslation } from 'react-i18next';
+
 export function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="border-t py-6 text-center text-sm text-muted-foreground">
       <div className="container">
         <p>
-          Made with care by{' '}
+          {t('footer.madeBy')}{' '}
           <a
             href="https://github.com/paveg"
             target="_blank"
@@ -19,7 +23,7 @@ export function Footer() {
             rel="noopener noreferrer"
             className="text-foreground hover:underline"
           >
-            View on GitHub
+            {t('footer.viewOnGitHub')}
           </a>
         </p>
       </div>
