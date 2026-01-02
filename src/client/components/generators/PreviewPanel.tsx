@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ImageIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { CodeOutput } from './CodeOutput';
 
 interface PreviewPanelProps {
@@ -8,65 +10,110 @@ interface PreviewPanelProps {
   alt: string;
 }
 
-export function PreviewPanel({ url, alt }: PreviewPanelProps) {
-  const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
+type ImageState = 'idle' | 'loading' | 'loaded' | 'error';
 
-  useEffect(() => {
-    if (url) {
-      setLoading(true);
-      setError(false);
-      setImageLoaded(false);
-    }
-  }, [url]);
+/** Image preview component that resets on URL change via key prop */
+function ImagePreview({
+  url,
+  alt,
+  onStateChange,
+}: {
+  url: string;
+  alt: string;
+  onStateChange: (state: ImageState) => void;
+}) {
+  const [state, setState] = useState<ImageState>('loading');
 
-  const handleImageLoad = () => {
-    setLoading(false);
-    setImageLoaded(true);
+  const handleLoad = () => {
+    setState('loaded');
+    onStateChange('loaded');
   };
 
-  const handleImageError = () => {
-    setLoading(false);
-    setError(true);
+  const handleError = () => {
+    setState('error');
+    onStateChange('error');
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg">{t('generator.preview')}</CardTitle>
+    <img
+      src={url}
+      alt={alt}
+      onLoad={handleLoad}
+      onError={handleError}
+      className={`max-w-full transition-opacity duration-300 ${state === 'loaded' ? 'opacity-100' : 'hidden opacity-0'}`}
+    />
+  );
+}
+
+export const PreviewPanel = memo(function PreviewPanel({ url, alt }: PreviewPanelProps) {
+  const { t } = useTranslation();
+  // Track both the state and which URL it belongs to
+  const [stateForUrl, setStateForUrl] = useState<{ url: string | null; state: ImageState }>({
+    url: null,
+    state: 'idle',
+  });
+
+  // Reset state when URL changes (React's recommended pattern for derived state)
+  const imageState = stateForUrl.url === url ? stateForUrl.state : (url ? 'loading' : 'idle');
+
+  const handleStateChange = (state: ImageState) => {
+    setStateForUrl({ url, state });
+  };
+
+  // Determine display state based on URL and image loading state
+  const showEmpty = !url;
+  const showLoading = url && imageState !== 'loaded' && imageState !== 'error';
+  const showError = url && imageState === 'error';
+  const showImage = url && imageState === 'loaded';
+
+  return (
+    <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-lg font-semibold tracking-tight">
+          {t('generator.preview')}
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex min-h-[200px] items-center justify-center rounded-lg bg-muted/50 p-4">
-          {!url && (
-            <p className="text-sm text-muted-foreground">
-              {t('generator.previewEmpty')}
-            </p>
+        <div className="flex min-h-[220px] items-center justify-center rounded-xl bg-muted/30 p-6">
+          {showEmpty && (
+            <div className="flex flex-col items-center gap-3 text-muted-foreground">
+              <ImageIcon className="h-10 w-10 opacity-50" />
+              <p className="text-center text-sm">
+                {t('generator.previewEmpty')}
+              </p>
+            </div>
           )}
-          {url && loading && (
-            <p className="text-sm text-muted-foreground">{t('generator.previewLoading')}</p>
+          {showLoading && (
+            <div className="w-full max-w-md space-y-3">
+              <Skeleton className="mx-auto h-6 w-2/3" />
+              <Skeleton className="mx-auto h-28 w-full" />
+              <div className="flex justify-center gap-6">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+            </div>
           )}
-          {url && error && (
-            <p className="text-sm text-destructive">
+          {showError && (
+            <p className="text-center text-sm text-destructive">
               {t('generator.previewError')}
             </p>
           )}
           {url && (
-            <img
-              src={url}
+            // key={url} resets the ImagePreview component when URL changes
+            <ImagePreview
+              key={url}
+              url={url}
               alt={alt}
-              onLoad={handleImageLoad}
-              onError={handleImageError}
-              className={imageLoaded ? 'max-w-full' : 'hidden'}
+              onStateChange={handleStateChange}
             />
           )}
         </div>
 
-        {url && imageLoaded && (
+        {showImage && (
           <CodeOutput url={url} alt={alt} />
         )}
       </CardContent>
     </Card>
   );
-}
+});

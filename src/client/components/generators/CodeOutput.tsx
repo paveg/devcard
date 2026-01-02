@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Copy, Check } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,82 +11,75 @@ interface CodeOutputProps {
 
 const PRODUCTION_BASE_URL = 'https://devcard.pavegy.workers.dev';
 
-export function CodeOutput({ url, alt }: CodeOutputProps) {
+export const CodeOutput = memo(function CodeOutput({ url, alt }: CodeOutputProps) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('markdown');
 
-  // Convert relative URL to absolute production URL for code output
-  const getFullUrl = (relativeUrl: string) => {
-    if (relativeUrl.startsWith('http')) return relativeUrl;
-    return `${PRODUCTION_BASE_URL}${relativeUrl}`;
-  };
+  // Memoize the full URL calculation
+  const fullUrl = useMemo(() => {
+    if (url.startsWith('http')) return url;
+    return `${PRODUCTION_BASE_URL}${url}`;
+  }, [url]);
 
-  const getCode = (format: string) => {
-    const fullUrl = getFullUrl(url);
-    switch (format) {
-      case 'markdown':
-        return `![${alt}](${fullUrl})`;
-      case 'html':
-        return `<img src="${fullUrl}" alt="${alt}" />`;
-      case 'url':
-        return fullUrl;
-      default:
-        return fullUrl;
-    }
-  };
+  // Memoize all code formats
+  const codes = useMemo(() => ({
+    markdown: `![${alt}](${fullUrl})`,
+    html: `<img src="${fullUrl}" alt="${alt}" />`,
+    url: fullUrl,
+  }), [alt, fullUrl]);
 
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(getCode(activeTab));
+  const handleCopy = useCallback(async () => {
+    await navigator.clipboard.writeText(codes[activeTab as keyof typeof codes]);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
+  }, [codes, activeTab]);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <div className="flex items-center justify-between">
-          <TabsList>
-            <TabsTrigger value="markdown">{t('code.markdown')}</TabsTrigger>
-            <TabsTrigger value="html">{t('code.html')}</TabsTrigger>
-            <TabsTrigger value="url">{t('code.url')}</TabsTrigger>
+        <div className="flex items-center justify-between gap-2">
+          <TabsList className="bg-muted/50">
+            <TabsTrigger value="markdown" className="text-xs">
+              {t('code.markdown')}
+            </TabsTrigger>
+            <TabsTrigger value="html" className="text-xs">
+              {t('code.html')}
+            </TabsTrigger>
+            <TabsTrigger value="url" className="text-xs">
+              {t('code.url')}
+            </TabsTrigger>
           </TabsList>
           <Button
             variant="outline"
             size="sm"
             onClick={handleCopy}
-            className="gap-1.5"
+            className="h-8 gap-1.5 text-xs"
           >
             {copied ? (
               <>
-                <Check className="h-3.5 w-3.5" />
+                <Check className="h-3 w-3 text-green-500" />
                 {t('code.copied')}
               </>
             ) : (
               <>
-                <Copy className="h-3.5 w-3.5" />
+                <Copy className="h-3 w-3" />
                 {t('code.copy')}
               </>
             )}
           </Button>
         </div>
 
-        <TabsContent value="markdown" className="mt-2">
-          <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-sm">
-            <code>{getCode('markdown')}</code>
-          </pre>
-        </TabsContent>
-        <TabsContent value="html" className="mt-2">
-          <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-sm">
-            <code>{getCode('html')}</code>
-          </pre>
-        </TabsContent>
-        <TabsContent value="url" className="mt-2">
-          <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-sm">
-            <code>{getCode('url')}</code>
-          </pre>
-        </TabsContent>
+        {(['markdown', 'html', 'url'] as const).map((format) => (
+          <TabsContent key={format} value={format} className="mt-3">
+            <pre className="overflow-x-auto rounded-lg border border-border/50 bg-muted/30 p-4 text-sm">
+              <code className="font-mono text-foreground/90">
+                {codes[format]}
+              </code>
+            </pre>
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );
-}
+});
