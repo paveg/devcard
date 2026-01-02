@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,7 @@ import {
 import { ThemeSelect } from '@/components/generators/ThemeSelect';
 import { LocaleSelect } from '@/components/generators/LocaleSelect';
 import { PreviewPanel } from '@/components/generators/PreviewPanel';
+import { useUsername } from '@/contexts/username';
 
 const layouts = [
   { value: '', label: 'Default' },
@@ -30,7 +32,6 @@ const layouts = [
 ];
 
 interface FormState {
-  username: string;
   theme: string;
   locale: string;
   layout: string;
@@ -45,8 +46,9 @@ interface FormState {
 }
 
 export function LanguagesGenerator() {
+  const { t } = useTranslation();
+  const { username, setUsername } = useUsername();
   const [form, setForm] = useState<FormState>({
-    username: '',
     theme: 'default',
     locale: 'en',
     layout: '',
@@ -70,10 +72,10 @@ export function LanguagesGenerator() {
   );
 
   const buildUrl = useCallback(() => {
-    if (!form.username.trim()) return null;
+    if (!username.trim()) return null;
 
     const params = new URLSearchParams();
-    params.set('username', form.username.trim());
+    params.set('username', username.trim());
 
     if (form.theme && form.theme !== 'default') params.set('theme', form.theme);
     if (form.locale && form.locale !== 'en') params.set('locale', form.locale);
@@ -88,7 +90,7 @@ export function LanguagesGenerator() {
     if (form.excludeRepo.trim()) params.set('exclude_repo', form.excludeRepo.trim());
 
     return `/api/top-langs?${params.toString()}`;
-  }, [form]);
+  }, [form, username]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,26 +100,26 @@ export function LanguagesGenerator() {
   return (
     <div className="container py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">Top Languages Generator</h1>
+        <h1 className="text-2xl font-bold">{t('languages.title')}</h1>
         <p className="text-muted-foreground">
-          Display the programming languages you use most across your repositories.
+          {t('languages.subtitle')}
         </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Options</CardTitle>
+            <CardTitle className="text-base">{t('generator.options')}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="username">GitHub Username *</Label>
+                <Label htmlFor="username">{t('generator.usernameRequired')}</Label>
                 <Input
                   id="username"
                   placeholder="octocat"
-                  value={form.username}
-                  onChange={(e) => updateForm('username', e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
@@ -128,7 +130,7 @@ export function LanguagesGenerator() {
               />
 
               <div className="space-y-2">
-                <Label>Layout</Label>
+                <Label>{t('languages.layout')}</Label>
                 <Select
                   value={form.layout}
                   onValueChange={(v) => updateForm('layout', v)}
@@ -150,7 +152,7 @@ export function LanguagesGenerator() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="langsCount">Languages Count</Label>
+                <Label htmlFor="langsCount">{t('languages.langsCount')}</Label>
                 <Input
                   id="langsCount"
                   type="number"
@@ -167,13 +169,13 @@ export function LanguagesGenerator() {
               />
 
               <div className="space-y-2">
-                <Label>Options</Label>
+                <Label>{t('generator.options')}</Label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { key: 'hideBorder' as const, label: 'Hide Border' },
-                    { key: 'hideTitle' as const, label: 'Hide Title' },
-                    { key: 'hideProgress' as const, label: 'Hide Progress' },
-                    { key: 'disableAnimations' as const, label: 'No Animation' },
+                    { key: 'hideBorder' as const, label: t('languages.hideBorder') },
+                    { key: 'hideTitle' as const, label: t('languages.hideTitle') },
+                    { key: 'hideProgress' as const, label: t('languages.hideProgress') },
+                    { key: 'disableAnimations' as const, label: t('languages.noAnimation') },
                   ].map(({ key, label }) => (
                     <div key={key} className="flex items-center gap-2">
                       <Checkbox
@@ -198,7 +200,7 @@ export function LanguagesGenerator() {
                     className="w-full justify-between border-t pt-4"
                     type="button"
                   >
-                    Advanced Options
+                    {t('generator.advanced')}
                     <ChevronDown
                       className={`h-4 w-4 transition-transform ${
                         advancedOpen ? 'rotate-180' : ''
@@ -208,7 +210,7 @@ export function LanguagesGenerator() {
                 </CollapsibleTrigger>
                 <CollapsibleContent className="space-y-4 pt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="customTitle">Custom Title</Label>
+                    <Label htmlFor="customTitle">{t('languages.customTitle')}</Label>
                     <Input
                       id="customTitle"
                       placeholder="Most Used Languages"
@@ -218,7 +220,7 @@ export function LanguagesGenerator() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="hide">Hide Languages</Label>
+                    <Label htmlFor="hide">{t('languages.hide')}</Label>
                     <Input
                       id="hide"
                       placeholder="html,css,javascript"
@@ -226,12 +228,12 @@ export function LanguagesGenerator() {
                       onChange={(e) => updateForm('hide', e.target.value)}
                     />
                     <p className="text-xs text-muted-foreground">
-                      Comma-separated language names to exclude
+                      {t('languages.hideHint')}
                     </p>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="excludeRepo">Exclude Repositories</Label>
+                    <Label htmlFor="excludeRepo">{t('languages.excludeRepo')}</Label>
                     <Input
                       id="excludeRepo"
                       placeholder="repo1,repo2"
@@ -239,14 +241,14 @@ export function LanguagesGenerator() {
                       onChange={(e) => updateForm('excludeRepo', e.target.value)}
                     />
                     <p className="text-xs text-muted-foreground">
-                      Comma-separated repository names to exclude
+                      {t('languages.excludeRepoHint')}
                     </p>
                   </div>
                 </CollapsibleContent>
               </Collapsible>
 
               <Button type="submit" className="w-full">
-                Generate Card
+                {t('generator.generate')}
               </Button>
             </form>
           </CardContent>
@@ -254,7 +256,7 @@ export function LanguagesGenerator() {
 
         <PreviewPanel
           url={previewUrl}
-          alt={`${form.username}'s Top Languages`}
+          alt={`${username}'s Top Languages`}
         />
       </div>
     </div>

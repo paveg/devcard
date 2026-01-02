@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CodeOutput } from './CodeOutput';
 
@@ -8,6 +9,7 @@ interface PreviewPanelProps {
 }
 
 export function PreviewPanel({ url, alt }: PreviewPanelProps) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -33,21 +35,21 @@ export function PreviewPanel({ url, alt }: PreviewPanelProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Preview</CardTitle>
+        <CardTitle className="text-lg">{t('generator.preview')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex min-h-[200px] items-center justify-center rounded-lg bg-muted/50 p-4">
           {!url && (
             <p className="text-sm text-muted-foreground">
-              Enter details to generate preview
+              {t('generator.previewEmpty')}
             </p>
           )}
           {url && loading && (
-            <p className="text-sm text-muted-foreground">Loading...</p>
+            <p className="text-sm text-muted-foreground">{t('generator.previewLoading')}</p>
           )}
           {url && error && (
             <p className="text-sm text-destructive">
-              Failed to load. Check the username.
+              {t('generator.previewError')}
             </p>
           )}
           {url && (

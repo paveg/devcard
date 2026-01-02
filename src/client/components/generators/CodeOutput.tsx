@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Copy, Check } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ interface CodeOutputProps {
 const PRODUCTION_BASE_URL = 'https://devcard.pavegy.workers.dev';
 
 export function CodeOutput({ url, alt }: CodeOutputProps) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('markdown');
 
@@ -45,9 +47,9 @@ export function CodeOutput({ url, alt }: CodeOutputProps) {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <div className="flex items-center justify-between">
           <TabsList>
-            <TabsTrigger value="markdown">Markdown</TabsTrigger>
-            <TabsTrigger value="html">HTML</TabsTrigger>
-            <TabsTrigger value="url">URL</TabsTrigger>
+            <TabsTrigger value="markdown">{t('code.markdown')}</TabsTrigger>
+            <TabsTrigger value="html">{t('code.html')}</TabsTrigger>
+            <TabsTrigger value="url">{t('code.url')}</TabsTrigger>
           </TabsList>
           <Button
             variant="outline"
@@ -58,12 +60,12 @@ export function CodeOutput({ url, alt }: CodeOutputProps) {
             {copied ? (
               <>
                 <Check className="h-3.5 w-3.5" />
-                Copied
+                {t('code.copied')}
               </>
             ) : (
               <>
                 <Copy className="h-3.5 w-3.5" />
-                Copy
+                {t('code.copy')}
               </>
             )}
           </Button>

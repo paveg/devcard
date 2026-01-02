@@ -1,0 +1,116 @@
+{
+  "nav": {
+    "stats": "Stats",
+    "languages": "Languages",
+    "pin": "Pin"
+  },
+  "home": {
+    "title": "Beautiful GitHub Stats for Your README",
+    "subtitle": "Minimal, modern, and customizable GitHub statistics cards. Showcase your contributions with style.",
+    "placeholder": "GitHub username",
+    "generate": "Generate",
+    "preview": {
+      "empty": "Enter a GitHub username to preview",
+      "loading": "Loading...",
+      "error": "Failed to load stats. Check username or try again."
+    },
+    "customize": {
+      "stats": "Customize Stats",
+      "languages": "Top Languages",
+      "pin": "Repo Pin"
+    }
+  },
+  "features": {
+    "title": "Features",
+    "subtitle": "Everything you need to showcase your GitHub profile",
+    "themes": {
+      "title": "Beautiful Themes",
+      "desc": "Choose from multiple themes or customize colors to match your README aesthetic."
+    },
+    "i18n": {
+      "title": "i18n Support",
+      "desc": "Display your stats in English or Japanese. More languages coming soon."
+    },
+    "fast": {
+      "title": "Lightning Fast",
+      "desc": "Powered by Cloudflare Workers with intelligent caching for instant loading."
+    },
+    "cards": {
+      "title": "Multiple Card Types",
+      "desc": "Stats card, language breakdown, and repository pins - all in one service."
+    },
+    "design": {
+      "title": "Minimal Design",
+      "desc": "Clean, modern SVG cards that look great in any README."
+    },
+    "privacy": {
+      "title": "Privacy First",
+      "desc": "No tracking, no cookies. Just beautiful stats for your profile."
+    }
+  },
+  "generator": {
+    "username": "GitHub Username",
+    "usernameRequired": "GitHub Username *",
+    "repo": "Repository Name",
+    "repoRequired": "Repository Name *",
+    "theme": "Theme",
+    "locale": "Card Language",
+    "options": "Options",
+    "advanced": "Advanced Options",
+    "generate": "Generate Card",
+    "preview": "Preview",
+    "previewEmpty": "Enter details to generate preview",
+    "previewLoading": "Loading...",
+    "previewError": "Failed to load. Check the username."
+  },
+  "stats": {
+    "title": "Stats Card Generator",
+    "subtitle": "Display your GitHub profile statistics with a beautiful card.",
+    "showIcons": "Show Icons",
+    "hideRank": "Hide Rank",
+    "hideBorder": "Hide Border",
+    "hideTitle": "Hide Title",
+    "allCommits": "All Commits",
+    "noAnimation": "No Animation",
+    "customTitle": "Custom Title",
+    "hide": "Hide Stats",
+    "hideHint": "Comma-separated: stars, commits, prs, issues, contribs",
+    "show": "Show Stats",
+    "showHint": "Comma-separated: reviews, prs_merged, prs_merged_percentage"
+  },
+  "languages": {
+    "title": "Top Languages Generator",
+    "subtitle": "Display the programming languages you use most across your repositories.",
+    "layout": "Layout",
+    "langsCount": "Languages Count",
+    "hideBorder": "Hide Border",
+    "hideTitle": "Hide Title",
+    "hideProgress": "Hide Progress",
+    "noAnimation": "No Animation",
+    "customTitle": "Custom Title",
+    "hide": "Hide Languages",
+    "hideHint": "Comma-separated language names to exclude",
+    "excludeRepo": "Exclude Repositories",
+    "excludeRepoHint": "Comma-separated repository names to exclude"
+  },
+  "pin": {
+    "title": "Repository Pin Generator",
+    "subtitle": "Highlight your best repositories with beautiful pin cards.",
+    "showOwner": "Show Owner",
+    "hideBorder": "Hide Border",
+    "noAnimation": "No Animation",
+    "descriptionLines": "Description Lines",
+    "descriptionLinesHint": "Number of lines for description (1-5)"
+  },
+  "code": {
+    "markdown": "Markdown",
+    "html": "HTML",
+    "url": "URL",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "footer": {
+    "madeBy": "Made with care by",
+    "viewOnGitHub": "View on GitHub"
+  }
+}
