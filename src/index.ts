@@ -3,8 +3,12 @@ import { api } from './api';
 import type { Env } from './types';
 import { rateLimitMiddleware } from './middleware/rate-limit';
 import { compressionMiddleware } from './middleware/compression';
+import { loggerMiddleware } from './middleware/logger';
 
 const app = new Hono<{ Bindings: Env }>();
+
+// Apply logging to all routes
+app.use('*', loggerMiddleware);
 
 app.use('*', async (c, next) => {
   c.header('Access-Control-Allow-Origin', '*');
