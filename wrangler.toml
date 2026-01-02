@@ -1,0 +1,12 @@
+name = "devcard"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+[vars]
+# Set your GitHub token as a secret: wrangler secret put GITHUB_TOKEN
+# GITHUB_TOKEN = ""
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "devcard_cache"
+preview_id = "devcard_cache_preview"

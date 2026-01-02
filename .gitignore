@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment files
+.env
+.env.local
+.env.production
+.dev.vars
+
+# Build outputs
+dist/
+build/
+.wrangler/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test files
+test-*.html
+test-*.mjs
+test-*.js
+preview-*.mjs
+launch-*.mjs
+open-*.mjs
+direct-*.mjs
+direct-*.html
+*-test.svg
+test-output-*.svg
+test-results-*.md
+*.svg
+svg-preview.html
+
+# Playwright
+playwright-report/
+test-results/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+.cache/
+
+# Coverage
+coverage/
+.nyc_output/
