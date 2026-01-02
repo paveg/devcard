@@ -29,17 +29,21 @@ const FeatureCard = memo(function FeatureCard({
   description,
 }: FeatureCardProps) {
   return (
-    <Card className="group relative overflow-hidden border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-border hover:shadow-lg">
-      <CardContent className="pt-6">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary/20">
-          <Icon className="h-6 w-6 text-primary" />
-        </div>
-        <h3 className="mb-2 font-semibold tracking-tight">{title}</h3>
-        <p className="text-sm leading-relaxed text-muted-foreground text-pretty">{description}</p>
-      </CardContent>
+    <article className="group relative overflow-hidden rounded-lg border border-border/50 bg-card/50 p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-border hover:shadow-lg">
+      <div
+        className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary/20"
+        aria-hidden="true"
+      >
+        <Icon className="h-6 w-6 text-primary" />
+      </div>
+      <h3 className="mb-2 font-semibold tracking-tight">{title}</h3>
+      <p className="text-sm leading-relaxed text-muted-foreground text-pretty">{description}</p>
       {/* Subtle gradient overlay on hover */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-    </Card>
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+        aria-hidden="true"
+      />
+    </article>
   );
 });
 
@@ -106,8 +110,11 @@ export function Home() {
   return (
     <div className="container py-12 md:py-16 lg:py-20">
       {/* Hero Section */}
-      <section className="mx-auto max-w-3xl text-center">
-        <h1 className="mb-6 text-balance bg-gradient-to-b from-foreground via-foreground to-muted-foreground bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl lg:text-6xl">
+      <section className="mx-auto max-w-3xl text-center" aria-labelledby="hero-title">
+        <h1
+          id="hero-title"
+          className="mb-6 text-balance bg-gradient-to-b from-foreground via-foreground to-muted-foreground bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl lg:text-6xl"
+        >
           {t('home.title')}
         </h1>
         <p className="mx-auto mb-10 max-w-2xl text-pretty text-lg text-muted-foreground sm:text-xl">
@@ -154,7 +161,13 @@ export function Home() {
               {previewUrl && (
                 <img
                   src={previewUrl}
-                  alt="GitHub Stats Preview"
+                  alt={t('home.preview.alt', 'GitHub Stats Preview for {{username}}', {
+                    username: username || 'user',
+                  })}
+                  width={495}
+                  height={195}
+                  loading="eager"
+                  decoding="async"
                   onLoad={handleImageLoad}
                   onError={handleImageError}
                   className={`max-w-full transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'hidden opacity-0'}`}
@@ -189,9 +202,9 @@ export function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="mx-auto max-w-5xl">
+      <section className="mx-auto max-w-5xl" aria-labelledby="features-title">
         <div className="mb-10 text-center">
-          <h2 className="mb-3 text-balance text-3xl font-bold tracking-tight">
+          <h2 id="features-title" className="mb-3 text-balance text-3xl font-bold tracking-tight">
             {t('features.title')}
           </h2>
           <p className="mx-auto max-w-xl text-pretty text-muted-foreground">

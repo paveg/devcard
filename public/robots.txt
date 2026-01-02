@@ -1,0 +1,41 @@
+# DevCard - GitHub Readme Stats Generator
+# robots.txt
+
+# Allow all bots to crawl and index the site
+User-agent: *
+Allow: /
+Allow: /stats
+Allow: /languages
+Allow: /pin
+
+# Disallow crawling of private paths (if any)
+# Disallow: /admin
+
+# Crawl delay to be respectful to server resources
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://devcard.pavegy.workers.dev/sitemap.xml
+
+# Allow specific search engine bots with different crawl delays
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0.5
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Block aggressive crawlers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# Rule for other search engines
+User-agent: *
+Allow: /

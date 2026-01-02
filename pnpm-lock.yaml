@@ -59,6 +59,9 @@ importers:
       tailwind-merge:
         specifier: ^2.6.0
         version: 2.6.0
+      web-vitals:
+        specifier: 5.1.0
+        version: 5.1.0
     devDependencies:
       '@biomejs/biome':
         specifier: 2.3.10
@@ -2165,6 +2168,9 @@ packages:
     resolution: {integrity: sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==}
     engines: {node: '>=0.10.0'}
 
+  web-vitals@5.1.0:
+    resolution: {integrity: sha512-ArI3kx5jI0atlTtmV0fWU3fjpLmq/nD3Zr1iFFlJLaqa5wLBkUSzINwBPySCX/8jRyjlmy1Volw1kz1g9XE4Jg==}
+
   workerd@1.20251210.0:
     resolution: {integrity: sha512-9MUUneP1BnRE9XAYi94FXxHmiLGbO75EHQZsgWqSiOXjoXSqJCw8aQbIEPxCy19TclEl/kHUFYce8ST2W+Qpjw==}
     engines: {node: '>=16'}
@@ -3991,6 +3997,8 @@ snapshots:
       yaml: 2.8.2
 
   void-elements@3.1.0: {}
+
+  web-vitals@5.1.0: {}
 
   workerd@1.20251210.0:
     optionalDependencies:

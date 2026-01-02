@@ -4,6 +4,7 @@ import { createRepoCard } from '../cards/repo';
 import { createStatsCard } from '../cards/stats';
 import { fetchRepo, fetchTopLanguages, fetchUserStats } from '../fetchers/github';
 import type { Env, LanguagesCardOptions, RepoCardOptions, StatsCardOptions } from '../types';
+import { AnalyticsCollector } from '../utils/analytics';
 import { CACHE_TTL_EXPORT, CacheManager, getCacheHeaders } from '../utils/cache';
 
 const api = new Hono<{ Bindings: Env }>();
@@ -165,6 +166,71 @@ api.get('/pin', async (c) => {
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     return c.text(`Error: ${message}`, 500);
+  }
+});
+
+// Analytics endpoints for frontend observability
+api.post('/analytics/vitals', async (c) => {
+  try {
+    const data = await c.req.json();
+    const analytics = new AnalyticsCollector(c.env);
+
+    await analytics.recordWebVital({
+      name: data.name,
+      value: data.value,
+      rating: data.rating,
+      page: data.page,
+      timestamp: data.timestamp,
+      userAgent: c.req.header('User-Agent'),
+      country: c.req.header('CF-IPCountry'),
+    });
+
+    return c.json({ success: true }, 200);
+  } catch (error) {
+    console.error('Failed to record web vital:', error);
+    return c.json({ success: false }, 500);
+  }
+});
+
+api.post('/analytics/error', async (c) => {
+  try {
+    const data = await c.req.json();
+    const analytics = new AnalyticsCollector(c.env);
+
+    await analytics.recordError({
+      message: data.message,
+      stack: data.stack,
+      componentStack: data.componentStack,
+      page: data.page,
+      userAgent: data.userAgent,
+      timestamp: data.timestamp,
+      ip: c.req.header('CF-Connecting-IP'),
+      country: c.req.header('CF-IPCountry'),
+    });
+
+    return c.json({ success: true }, 200);
+  } catch (error) {
+    console.error('Failed to record error:', error);
+    return c.json({ success: false }, 500);
+  }
+});
+
+api.post('/analytics/custom', async (c) => {
+  try {
+    const data = await c.req.json();
+    const analytics = new AnalyticsCollector(c.env);
+
+    await analytics.recordCustomMetric({
+      name: data.name,
+      value: data.value,
+      metadata: data.metadata,
+      timestamp: data.timestamp,
+    });
+
+    return c.json({ success: true }, 200);
+  } catch (error) {
+    console.error('Failed to record custom metric:', error);
+    return c.json({ success: false }, 500);
   }
 });
 
