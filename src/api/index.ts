@@ -2,12 +2,20 @@ import { Hono } from 'hono';
 import { createLanguagesCard } from '../cards/languages';
 import { createRepoCard } from '../cards/repo';
 import { createStatsCard } from '../cards/stats';
-import { fetchRepo, fetchTopLanguages, fetchUserStats } from '../fetchers/github';
+import { fetchRepo, fetchTopLanguages, fetchUserStats, setObservability } from '../fetchers/github';
 import type { Env, LanguagesCardOptions, RepoCardOptions, StatsCardOptions } from '../types';
 import { AnalyticsCollector } from '../utils/analytics';
 import { CACHE_TTL_EXPORT, CacheManager, getCacheHeaders } from '../utils/cache';
+import { createObservability } from '../utils/observability';
 
 const api = new Hono<{ Bindings: Env }>();
+
+// Initialize observability for GitHub API tracking
+api.use('*', async (c, next) => {
+  const observability = createObservability(c);
+  setObservability(observability);
+  await next();
+});
 
 const parseBoolean = (value: string | undefined): boolean | undefined => {
   if (value === 'true') return true;

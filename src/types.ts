@@ -148,4 +148,20 @@ export interface Env {
   GITHUB_TOKEN?: string;
   CACHE?: KVNamespace;
   ASSETS: Fetcher;
+  ANALYTICS?: AnalyticsEngineDataset;
+  LOG_LEVEL?: string;
+}
+
+// Analytics Engine types
+export interface AnalyticsEngineDataset {
+  writeDataPoint(event: AnalyticsEngineDataPoint): void;
+}
+
+export interface AnalyticsEngineDataPoint {
+  // Blobs are indexed string fields (max 20, each max 1024 bytes)
+  blobs?: ArrayBuffer[];
+  // Doubles are numeric fields for aggregation (max 20)
+  doubles?: number[];
+  // Indexes are used for filtering/grouping (max 1, max 96 bytes)
+  indexes?: [string];
 }
