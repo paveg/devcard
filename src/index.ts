@@ -1,9 +1,9 @@
 import { Hono } from 'hono';
 import { api } from './api';
-import type { Env } from './types';
-import { rateLimitMiddleware } from './middleware/rate-limit';
 import { compressionMiddleware } from './middleware/compression';
 import { loggerMiddleware } from './middleware/logger';
+import { rateLimitMiddleware } from './middleware/rate-limit';
+import type { Env } from './types';
 
 const app = new Hono<{ Bindings: Env }>();
 

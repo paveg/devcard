@@ -1,8 +1,8 @@
-import { useState, useCallback, memo, useMemo } from 'react';
+import { Check, Copy } from 'lucide-react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Copy, Check } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface CodeOutputProps {
   url: string;
@@ -23,11 +23,14 @@ export const CodeOutput = memo(function CodeOutput({ url, alt }: CodeOutputProps
   }, [url]);
 
   // Memoize all code formats
-  const codes = useMemo(() => ({
-    markdown: `![${alt}](${fullUrl})`,
-    html: `<img src="${fullUrl}" alt="${alt}" />`,
-    url: fullUrl,
-  }), [alt, fullUrl]);
+  const codes = useMemo(
+    () => ({
+      markdown: `![${alt}](${fullUrl})`,
+      html: `<img src="${fullUrl}" alt="${alt}" />`,
+      url: fullUrl,
+    }),
+    [alt, fullUrl]
+  );
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(codes[activeTab as keyof typeof codes]);
@@ -50,12 +53,7 @@ export const CodeOutput = memo(function CodeOutput({ url, alt }: CodeOutputProps
               {t('code.url')}
             </TabsTrigger>
           </TabsList>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCopy}
-            className="h-8 gap-1.5 text-xs"
-          >
+          <Button variant="outline" size="sm" onClick={handleCopy} className="h-8 gap-1.5 text-xs">
             {copied ? (
               <>
                 <Check className="h-3 w-3 text-green-500" />
@@ -73,9 +71,7 @@ export const CodeOutput = memo(function CodeOutput({ url, alt }: CodeOutputProps
         {(['markdown', 'html', 'url'] as const).map((format) => (
           <TabsContent key={format} value={format} className="mt-3">
             <pre className="overflow-x-auto rounded-lg border border-border/50 bg-muted/30 p-4 text-sm">
-              <code className="font-mono text-foreground/90">
-                {codes[format]}
-              </code>
+              <code className="font-mono text-foreground/90">{codes[format]}</code>
             </pre>
           </TabsContent>
         ))}

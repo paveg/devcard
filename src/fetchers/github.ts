@@ -1,4 +1,4 @@
-import type { GitHubUser, GitHubRepo, LanguageEdge, UserStats, LanguageStats, Env } from '../types';
+import type { Env, GitHubRepo, GitHubUser, LanguageEdge, LanguageStats, UserStats } from '../types';
 import { calculateRank } from '../utils';
 
 const GITHUB_API = 'https://api.github.com/graphql';
@@ -101,8 +101,8 @@ const fetchGitHub = async <T>(
     throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
   }
 
-  const data = await response.json() as { data: T; errors?: Array<{ message: string }> };
-  
+  const data = (await response.json()) as { data: T; errors?: Array<{ message: string }> };
+
   if (data.errors) {
     throw new Error(`GraphQL error: ${data.errors[0].message}`);
   }
@@ -128,9 +128,10 @@ export const fetchUserStats = async (
 
   const totalStars = user.repositories.nodes.reduce((acc, repo) => acc + repo.stargazerCount, 0);
   const totalForks = user.repositories.nodes.reduce((acc, repo) => acc + repo.forkCount, 0);
-  
+
   const totalCommits = includeAllCommits
-    ? user.contributionsCollection.totalCommitContributions + user.contributionsCollection.restrictedContributionsCount
+    ? user.contributionsCollection.totalCommitContributions +
+      user.contributionsCollection.restrictedContributionsCount
     : user.contributionsCollection.totalCommitContributions;
 
   const stats = {
@@ -155,7 +156,7 @@ export const fetchUserStats = async (
 export const fetchTopLanguages = async (
   username: string,
   env: Env,
-  excludeRepos: string[] = [],
+  _excludeRepos: string[] = [],
   langsCount: number = 5
 ): Promise<LanguageStats> => {
   const data = await fetchGitHub<{
@@ -168,11 +169,7 @@ export const fetchTopLanguages = async (
         }>;
       };
     };
-  }>(
-    TOP_LANGUAGES_QUERY,
-    { login: username, first: 100 },
-    env.GITHUB_TOKEN
-  );
+  }>(TOP_LANGUAGES_QUERY, { login: username, first: 100 }, env.GITHUB_TOKEN);
 
   if (!data.user) {
     throw new Error(`User "${username}" not found`);
@@ -199,7 +196,7 @@ export const fetchTopLanguages = async (
     .slice(0, langsCount);
 
   const totalSize = sorted.reduce((acc, lang) => acc + lang.size, 0);
-  
+
   const result: LanguageStats = {};
   for (const lang of sorted) {
     result[lang.name] = {
@@ -211,11 +208,7 @@ export const fetchTopLanguages = async (
   return result;
 };
 
-export const fetchRepo = async (
-  owner: string,
-  name: string,
-  env: Env
-): Promise<GitHubRepo> => {
+export const fetchRepo = async (owner: string, name: string, env: Env): Promise<GitHubRepo> => {
   const data = await fetchGitHub<{ repository: GitHubRepo }>(
     REPO_QUERY,
     { owner, name },

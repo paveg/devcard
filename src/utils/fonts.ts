@@ -6,7 +6,7 @@ export const getFontFamily = (locale: Locale = 'en'): string => {
     // Japanese font stack similar to GitHub's
     return 'Hiragino Kaku Gothic Pro, Yu Gothic UI, Meiryo UI, Meiryo, Noto Sans JP, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif';
   }
-  
+
   // Default font stack for English and other languages
   return '-apple-system, BlinkMacSystemFont, Segoe UI, Noto Sans, Helvetica, Arial, sans-serif';
 };
@@ -22,7 +22,7 @@ export const getFontSizes = (locale: Locale = 'en') => {
       normal: 13,
     };
   }
-  
+
   return {
     title: 18,
     label: 14,

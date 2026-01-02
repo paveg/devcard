@@ -1,17 +1,17 @@
-import type { RankInfo, CardOptions } from '../types';
 import { getTheme } from '../themes';
+import type { CardOptions, RankInfo } from '../types';
 
-export * from './locale';
-export * from './fonts';
 export * from './cache';
+export * from './fonts';
+export * from './locale';
 
 // Number formatting
 export const formatNumber = (num: number, precision: number = 1): string => {
   if (num >= 1000000) {
-    return (num / 1000000).toFixed(precision).replace(/\.0+$/, '') + 'M';
+    return `${(num / 1000000).toFixed(precision).replace(/\.0+$/, '')}M`;
   }
   if (num >= 1000) {
-    return (num / 1000).toFixed(precision).replace(/\.0+$/, '') + 'k';
+    return `${(num / 1000).toFixed(precision).replace(/\.0+$/, '')}k`;
   }
   return num.toString();
 };
@@ -77,7 +77,7 @@ export const parseColor = (color: string | undefined, defaultColor: string): str
 // Get colors from options with theme support
 export const getColors = (options: CardOptions) => {
   const theme = getTheme(options.theme);
-  
+
   return {
     titleColor: parseColor(options.titleColor, theme.titleColor),
     textColor: parseColor(options.textColor, theme.textColor),
@@ -97,21 +97,23 @@ export const parseGradient = (bgColor: string): string => {
 export const createGradientDef = (bgColor: string): string => {
   const parts = bgColor.split(',');
   if (parts.length < 3) return '';
-  
-  const angle = parseInt(parts[0]) || 0;
+
+  const angle = parseInt(parts[0], 10) || 0;
   const colors = parts.slice(1);
-  
+
   const rad = (angle * Math.PI) / 180;
   const x1 = 50 - Math.cos(rad) * 50;
   const y1 = 50 + Math.sin(rad) * 50;
   const x2 = 50 + Math.cos(rad) * 50;
   const y2 = 50 - Math.sin(rad) * 50;
-  
-  const stops = colors.map((color, i) => {
-    const percent = (i / (colors.length - 1)) * 100;
-    return `<stop offset="${percent}%" stop-color="#${color.trim()}" />`;
-  }).join('\n      ');
-  
+
+  const stops = colors
+    .map((color, i) => {
+      const percent = (i / (colors.length - 1)) * 100;
+      return `<stop offset="${percent}%" stop-color="#${color.trim()}" />`;
+    })
+    .join('\n      ');
+
   return `
     <linearGradient id="gradient" x1="${x1}%" y1="${y1}%" x2="${x2}%" y2="${y2}%">
       ${stops}
@@ -129,7 +131,7 @@ export const wrapText = (text: string, maxWidth: number, fontSize: number = 12):
   const words = text.split(' ');
   const lines: string[] = [];
   let currentLine = '';
-  
+
   for (const word of words) {
     const testLine = currentLine ? `${currentLine} ${word}` : word;
     if (measureText(testLine, fontSize) > maxWidth) {
@@ -137,18 +139,18 @@ export const wrapText = (text: string, maxWidth: number, fontSize: number = 12):
         lines.push(currentLine);
         currentLine = word;
       } else {
-        lines.push(word.slice(0, Math.floor(maxWidth / (fontSize * 0.6)) - 3) + '...');
+        lines.push(`${word.slice(0, Math.floor(maxWidth / (fontSize * 0.6)) - 3)}...`);
         currentLine = '';
       }
     } else {
       currentLine = testLine;
     }
   }
-  
+
   if (currentLine) {
     lines.push(currentLine);
   }
-  
+
   return lines;
 };
 

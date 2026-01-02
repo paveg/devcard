@@ -1,11 +1,15 @@
-import { useState, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ChevronDown, Code2 } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { LocaleSelect } from '@/components/generators/LocaleSelect';
+import { PreviewPanel } from '@/components/generators/PreviewPanel';
+import { ThemeSelect } from '@/components/generators/ThemeSelect';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -13,14 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
-import { ThemeSelect } from '@/components/generators/ThemeSelect';
-import { LocaleSelect } from '@/components/generators/LocaleSelect';
-import { PreviewPanel } from '@/components/generators/PreviewPanel';
 import { useUsername } from '@/contexts/username';
 
 const layouts = [
@@ -64,12 +60,9 @@ export function LanguagesGenerator() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
-  const updateForm = useCallback(
-    <K extends keyof FormState>(key: K, value: FormState[K]) => {
-      setForm((prev) => ({ ...prev, [key]: value }));
-    },
-    []
-  );
+  const updateForm = useCallback(<K extends keyof FormState>(key: K, value: FormState[K]) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
   const buildUrl = useCallback(() => {
     if (!username.trim()) return null;
@@ -104,13 +97,9 @@ export function LanguagesGenerator() {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
             <Code2 className="h-5 w-5 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            {t('languages.title')}
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t('languages.title')}</h1>
         </div>
-        <p className="max-w-2xl text-pretty text-muted-foreground">
-          {t('languages.subtitle')}
-        </p>
+        <p className="max-w-2xl text-pretty text-muted-foreground">{t('languages.subtitle')}</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
@@ -131,26 +120,17 @@ export function LanguagesGenerator() {
                 />
               </div>
 
-              <ThemeSelect
-                value={form.theme}
-                onValueChange={(v) => updateForm('theme', v)}
-              />
+              <ThemeSelect value={form.theme} onValueChange={(v) => updateForm('theme', v)} />
 
               <div className="space-y-2">
                 <Label>{t('languages.layout')}</Label>
-                <Select
-                  value={form.layout}
-                  onValueChange={(v) => updateForm('layout', v)}
-                >
+                <Select value={form.layout} onValueChange={(v) => updateForm('layout', v)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a layout" />
                   </SelectTrigger>
                   <SelectContent>
                     {layouts.map((layout) => (
-                      <SelectItem
-                        key={layout.value || 'default'}
-                        value={layout.value || 'default'}
-                      >
+                      <SelectItem key={layout.value || 'default'} value={layout.value || 'default'}>
                         {layout.label}
                       </SelectItem>
                     ))}
@@ -170,10 +150,7 @@ export function LanguagesGenerator() {
                 />
               </div>
 
-              <LocaleSelect
-                value={form.locale}
-                onValueChange={(v) => updateForm('locale', v)}
-              />
+              <LocaleSelect value={form.locale} onValueChange={(v) => updateForm('locale', v)} />
 
               <div className="space-y-2">
                 <Label>{t('generator.options')}</Label>
@@ -188,9 +165,7 @@ export function LanguagesGenerator() {
                       <Checkbox
                         id={key}
                         checked={form[key]}
-                        onCheckedChange={(checked) =>
-                          updateForm(key, checked === true)
-                        }
+                        onCheckedChange={(checked) => updateForm(key, checked === true)}
                       />
                       <Label htmlFor={key} className="text-sm font-normal">
                         {label}
@@ -209,9 +184,7 @@ export function LanguagesGenerator() {
                   >
                     {t('generator.advanced')}
                     <ChevronDown
-                      className={`h-4 w-4 transition-transform ${
-                        advancedOpen ? 'rotate-180' : ''
-                      }`}
+                      className={`h-4 w-4 transition-transform ${advancedOpen ? 'rotate-180' : ''}`}
                     />
                   </Button>
                 </CollapsibleTrigger>
@@ -234,9 +207,7 @@ export function LanguagesGenerator() {
                       value={form.hide}
                       onChange={(e) => updateForm('hide', e.target.value)}
                     />
-                    <p className="text-xs text-muted-foreground">
-                      {t('languages.hideHint')}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{t('languages.hideHint')}</p>
                   </div>
 
                   <div className="space-y-2">
@@ -261,10 +232,7 @@ export function LanguagesGenerator() {
           </CardContent>
         </Card>
 
-        <PreviewPanel
-          url={previewUrl}
-          alt={`${username}'s Top Languages`}
-        />
+        <PreviewPanel url={previewUrl} alt={`${username}'s Top Languages`} />
       </div>
     </div>
   );

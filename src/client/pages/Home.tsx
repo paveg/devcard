@@ -1,19 +1,19 @@
-import { useState, memo } from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import {
-  Palette,
-  Globe,
-  Zap,
-  Code2,
-  Sparkles,
-  ShieldCheck,
   ArrowRight,
+  Code2,
+  Globe,
   type LucideIcon,
+  Palette,
+  ShieldCheck,
+  Sparkles,
+  Zap,
 } from 'lucide-react';
+import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useUsername } from '@/contexts/username';
 
@@ -35,9 +35,7 @@ const FeatureCard = memo(function FeatureCard({
           <Icon className="h-6 w-6 text-primary" />
         </div>
         <h3 className="mb-2 font-semibold tracking-tight">{title}</h3>
-        <p className="text-sm leading-relaxed text-muted-foreground text-pretty">
-          {description}
-        </p>
+        <p className="text-sm leading-relaxed text-muted-foreground text-pretty">{description}</p>
       </CardContent>
       {/* Subtle gradient overlay on hover */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
@@ -151,9 +149,7 @@ export function Home() {
                 </div>
               )}
               {previewUrl && error && (
-                <p className="text-center text-sm text-destructive">
-                  {t('home.preview.error')}
-                </p>
+                <p className="text-center text-sm text-destructive">{t('home.preview.error')}</p>
               )}
               {previewUrl && (
                 <img

@@ -1,9 +1,9 @@
+import { BarChart2, BarChart3, Code2, Github, Globe, Menu, Pin, X } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { BarChart3, BarChart2, Code2, Pin, Github, Globe, Menu, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export function Header() {
   const location = useLocation();
@@ -60,9 +60,7 @@ export function Header() {
               className="gap-1.5 text-muted-foreground hover:text-foreground"
             >
               <Globe className="h-4 w-4" />
-              <span className="text-xs font-medium">
-                {i18n.language === 'ja' ? 'EN' : 'JA'}
-              </span>
+              <span className="text-xs font-medium">{i18n.language === 'ja' ? 'EN' : 'JA'}</span>
             </Button>
             <Button
               variant="ghost"
@@ -70,11 +68,7 @@ export function Header() {
               asChild
               className="text-muted-foreground hover:text-foreground"
             >
-              <a
-                href="https://github.com/paveg/devcard"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://github.com/paveg/devcard" target="_blank" rel="noopener noreferrer">
                 <Github className="h-4 w-4" />
                 <span className="sr-only">GitHub</span>
               </a>
@@ -98,11 +92,7 @@ export function Header() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="text-muted-foreground"
           >
-            {mobileMenuOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             <span className="sr-only">Toggle menu</span>
           </Button>
         </div>

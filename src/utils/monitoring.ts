@@ -25,12 +25,14 @@ export class Monitor {
         country: c.req.header('CF-IPCountry') || 'unknown',
       });
     }
-    
+
     // Optionally store aggregated metrics in KV for analysis
     if (c.env.CACHE) {
       const key = `metrics:${Math.floor(Date.now() / 3600000)}`; // Hourly aggregation
       try {
-        const existing = await c.env.CACHE.get<{ count: number; errors: number }>(key, { type: 'json' }) || { count: 0, errors: 0 };
+        const existing = (await c.env.CACHE.get<{ count: number; errors: number }>(key, {
+          type: 'json',
+        })) || { count: 0, errors: 0 };
         await c.env.CACHE.put(
           key,
           JSON.stringify({
@@ -44,8 +46,8 @@ export class Monitor {
       }
     }
   }
-  
-  static trackTiming(name: string): { end: () => number } {
+
+  static trackTiming(_name: string): { end: () => number } {
     const start = Date.now();
     return {
       end: () => Date.now() - start,

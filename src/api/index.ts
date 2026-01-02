@@ -1,10 +1,10 @@
 import { Hono } from 'hono';
-import type { Env, StatsCardOptions, LanguagesCardOptions, RepoCardOptions } from '../types';
-import { fetchUserStats, fetchTopLanguages, fetchRepo } from '../fetchers/github';
-import { createStatsCard } from '../cards/stats';
 import { createLanguagesCard } from '../cards/languages';
 import { createRepoCard } from '../cards/repo';
-import { CacheManager, getCacheHeaders, CACHE_TTL_EXPORT } from '../utils/cache';
+import { createStatsCard } from '../cards/stats';
+import { fetchRepo, fetchTopLanguages, fetchUserStats } from '../fetchers/github';
+import type { Env, LanguagesCardOptions, RepoCardOptions, StatsCardOptions } from '../types';
+import { CACHE_TTL_EXPORT, CacheManager, getCacheHeaders } from '../utils/cache';
 
 const api = new Hono<{ Bindings: Env }>();
 
@@ -16,13 +16,16 @@ const parseBoolean = (value: string | undefined): boolean | undefined => {
 
 const parseArray = (value: string | undefined): string[] => {
   if (!value) return [];
-  return value.split(',').map(s => s.trim()).filter(Boolean);
+  return value
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
 };
 
 const parseNumber = (value: string | undefined): number | undefined => {
   if (!value) return undefined;
   const num = parseInt(value, 10);
-  return isNaN(num) ? undefined : num;
+  return Number.isNaN(num) ? undefined : num;
 };
 
 const parseCommonOptions = (query: Record<string, string | undefined>) => ({
