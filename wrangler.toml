@@ -11,5 +11,5 @@ directory = "./public"
 
 [[kv_namespaces]]
 binding = "CACHE"
-id = "devcard_cache"
-preview_id = "devcard_cache_preview"
+id = "ee1f8586ea9e4fcfa28b82870a1a3550"
+preview_id = "607a7597605c4984aae071103c16a817"
