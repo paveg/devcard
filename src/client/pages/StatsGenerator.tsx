@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, BarChart2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -86,18 +86,25 @@ export function StatsGenerator() {
   };
 
   return (
-    <div className="container py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">{t('stats.title')}</h1>
-        <p className="text-muted-foreground">
+    <div className="container py-8 md:py-12">
+      <div className="mb-8">
+        <div className="mb-3 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+            <BarChart2 className="h-5 w-5 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            {t('stats.title')}
+          </h1>
+        </div>
+        <p className="max-w-2xl text-pretty text-muted-foreground">
           {t('stats.subtitle')}
         </p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">{t('generator.options')}</CardTitle>
+      <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
+        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-base font-semibold">{t('generator.options')}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">

@@ -5,14 +5,14 @@
     "pin": "ピン"
   },
   "home": {
-    "title": "README用の美しいGitHub統計",
-    "subtitle": "ミニマル、モダン、カスタマイズ可能なGitHub統計カード。あなたの貢献をスタイリッシュに紹介。",
+    "title": "美しいGitHub統計カード",
+    "subtitle": "ミニマル、モダン、カスタマイズ可能。READMEを彩る統計カード。",
     "placeholder": "GitHubユーザー名",
     "generate": "生成",
     "preview": {
-      "empty": "プレビューするにはGitHubユーザー名を入力",
+      "empty": "ユーザー名を入力してプレビュー",
       "loading": "読み込み中...",
-      "error": "読み込みに失敗しました。ユーザー名を確認してください。"
+      "error": "読み込み失敗。ユーザー名を確認。"
     },
     "customize": {
       "stats": "統計をカスタマイズ",
@@ -22,30 +22,30 @@
   },
   "features": {
     "title": "機能",
-    "subtitle": "GitHubプロフィールを彩るすべてが揃っています",
+    "subtitle": "プロフィールを彩るすべてが揃う",
     "themes": {
       "title": "美しいテーマ",
-      "desc": "多数のテーマから選択するか、READMEに合わせて色をカスタマイズ。"
+      "desc": "多数のテーマから選択、または色をカスタマイズ。"
     },
     "i18n": {
       "title": "多言語対応",
-      "desc": "統計を日本語または英語で表示。今後も言語追加予定。"
+      "desc": "日本語・英語で表示。今後も言語追加予定。"
     },
     "fast": {
       "title": "超高速",
-      "desc": "Cloudflare Workersとインテリジェントキャッシュによる瞬時の読み込み。"
+      "desc": "エッジとキャッシュで瞬時に読み込み。"
     },
     "cards": {
-      "title": "複数のカードタイプ",
-      "desc": "統計カード、言語分布、リポジトリピン、すべて1つのサービスで。"
+      "title": "複数カードタイプ",
+      "desc": "統計・言語分布・ピン、すべて1サービスで。"
     },
     "design": {
       "title": "ミニマルデザイン",
-      "desc": "どんなREADMEにも映える、クリーンでモダンなSVGカード。"
+      "desc": "どんなREADMEにも映えるSVGカード。"
     },
     "privacy": {
       "title": "プライバシー重視",
-      "desc": "トラッキングなし、クッキーなし。美しい統計だけ。"
+      "desc": "トラッキングなし、クッキーなし。"
     }
   },
   "generator": {
@@ -59,13 +59,13 @@
     "advanced": "詳細オプション",
     "generate": "カードを生成",
     "preview": "プレビュー",
-    "previewEmpty": "詳細を入力してプレビューを生成",
+    "previewEmpty": "詳細を入力してプレビュー",
     "previewLoading": "読み込み中...",
-    "previewError": "読み込みに失敗しました。ユーザー名を確認してください。"
+    "previewError": "読み込み失敗。ユーザー名を確認。"
   },
   "stats": {
-    "title": "統計カードジェネレーター",
-    "subtitle": "GitHubプロフィールの統計を美しいカードで表示します。",
+    "title": "統計カード作成",
+    "subtitle": "プロフィール統計を美しいカードで表示。",
     "showIcons": "アイコンを表示",
     "hideRank": "ランクを非表示",
     "hideBorder": "枠線を非表示",
@@ -79,8 +79,8 @@
     "showHint": "カンマ区切り: reviews, prs_merged, prs_merged_percentage"
   },
   "languages": {
-    "title": "トップ言語ジェネレーター",
-    "subtitle": "リポジトリで最も使用しているプログラミング言語を表示します。",
+    "title": "トップ言語カード作成",
+    "subtitle": "使用言語を美しいカードで表示。",
     "layout": "レイアウト",
     "langsCount": "言語数",
     "hideBorder": "枠線を非表示",
@@ -94,8 +94,8 @@
     "excludeRepoHint": "除外するリポジトリ名をカンマ区切りで"
   },
   "pin": {
-    "title": "リポジトリピンジェネレーター",
-    "subtitle": "美しいピンカードでベストリポジトリをハイライト。",
+    "title": "リポジトリピン作成",
+    "subtitle": "ベストリポジトリをピンカードで紹介。",
     "showOwner": "オーナーを表示",
     "hideBorder": "枠線を非表示",
     "noAnimation": "アニメーションなし",
@@ -107,10 +107,10 @@
     "html": "HTML",
     "url": "URL",
     "copy": "コピー",
-    "copied": "コピー済み"
+    "copied": "コピー完了"
   },
   "footer": {
-    "madeBy": "作成者:",
+    "madeBy": "作成:",
     "viewOnGitHub": "GitHubで見る"
   }
 }
