@@ -120,6 +120,12 @@
   "footer": {
     "madeBy": "作成:",
     "viewOnGitHub": "GitHubで見る",
-    "love": "愛"
+    "love": "愛",
+    "privacy": "プライバシー"
+  },
+  "privacy": {
+    "title": "プライバシーポリシー",
+    "back": "ホームに戻る",
+    "lastUpdated": "最終更新日"
   }
 }

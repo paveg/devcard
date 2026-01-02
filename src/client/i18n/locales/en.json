@@ -120,6 +120,12 @@
   "footer": {
     "madeBy": "Made with care by",
     "viewOnGitHub": "View on GitHub",
-    "love": "love"
+    "love": "love",
+    "privacy": "Privacy"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "back": "Back to Home",
+    "lastUpdated": "Last updated"
   }
 }

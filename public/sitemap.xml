@@ -51,4 +51,12 @@
     </image:image>
   </url>
 
+  <!-- Privacy Policy Page -->
+  <url>
+    <loc>https://devcard.pavegy.workers.dev/privacy</loc>
+    <lastmod>2026-01-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
 </urlset>
