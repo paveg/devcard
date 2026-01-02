@@ -194,13 +194,14 @@ const createEmptyCard = (
   fontSize: any
 ): string => {
   const height = CARD_HEIGHT;
-  const padding = 15;
+  const padding = 20;
+  const titleY = 35;
 
   return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
   <rect width="${width}" height="${height}" fill="#${colors.bgColor}" rx="12" />
   <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" fill="none" stroke="#${colors.borderColor}" stroke-opacity="0.5" rx="12" />
 
-  <text x="${padding}" y="28" fill="#${colors.titleColor}" font-size="${fontSize.title}" font-family="${fontFamily}" font-weight="600">${title}</text>
+  <text x="${padding}" y="${titleY}" fill="#${colors.titleColor}" font-size="${fontSize.title}" font-family="${fontFamily}" font-weight="600">${title}</text>
   <text x="${width / 2}" y="${height / 2 + 10}" fill="#${colors.textColor}" font-size="${fontSize.normal}" font-family="${fontFamily}" text-anchor="middle" opacity="0.6">${trans.languages.noData}</text>
 </svg>`;
 };

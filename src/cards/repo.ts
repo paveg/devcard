@@ -32,21 +32,25 @@ export const createRepoCard = (repo: GitHubRepo, options: RepoCardOptions = {}):
 
   const width = options.cardWidth ?? 400;
   const height = CARD_HEIGHT;
-  const padding = 15;
+  const padding = 20;
+
+  // Vertical layout: top 20px, title, 15px gap, content, bottom 20px
+  const titleY = 35;
+  const contentStart = 55;
+  const statsY = height - 20;
 
   const titleText = showOwner ? repo.nameWithOwner : repo.name;
   const description = repo.description || trans.repo.noDescription;
   // Fixed max lines to fit in 195px height
-  const descLines = wrapText(description, width - padding * 2 - 20, 12).slice(0, 4);
+  const descLines = wrapText(description, width - padding * 2, 12).slice(0, 4);
 
   // Description section
   let descContent = '';
   descLines.forEach((line, i) => {
-    descContent += `<text x="${padding}" y="${52 + i * 18}" fill="#${colors.textColor}" font-size="${fontSize.small}" font-family="${fontFamily}" opacity="0.8">${escapeXml(line)}</text>\n`;
+    descContent += `<text x="${padding}" y="${contentStart + i * 20}" fill="#${colors.textColor}" font-size="${fontSize.small}" font-family="${fontFamily}" opacity="0.8">${escapeXml(line)}</text>\n`;
   });
 
-  // Stats section at fixed position
-  const statsY = height - 25;
+  // Stats section at fixed position (bottom - 20px)
   let statsX = padding;
 
   // Language dot
@@ -80,8 +84,8 @@ export const createRepoCard = (repo: GitHubRepo, options: RepoCardOptions = {}):
   let archivedBadge = '';
   if (repo.isArchived) {
     archivedBadge = `
-      <rect x="${width - 75}" y="12" width="60" height="18" fill="#${colors.textColor}" opacity="0.15" rx="9" />
-      <text x="${width - 45}" y="24" fill="#${colors.textColor}" font-size="10" font-family="${fontFamily}" text-anchor="middle">${trans.repo.archived}</text>
+      <rect x="${width - 75}" y="17" width="60" height="18" fill="#${colors.textColor}" opacity="0.15" rx="9" />
+      <text x="${width - 45}" y="29" fill="#${colors.textColor}" font-size="10" font-family="${fontFamily}" text-anchor="middle">${trans.repo.archived}</text>
     `;
   }
 
@@ -89,7 +93,7 @@ export const createRepoCard = (repo: GitHubRepo, options: RepoCardOptions = {}):
   <rect width="${width}" height="${height}" fill="#${colors.bgColor}" rx="12" />
   <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" fill="none" stroke="#${colors.borderColor}" stroke-opacity="0.5" rx="12" />
 
-  <g transform="translate(${padding}, 18)">
+  <g transform="translate(${padding}, 22)">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="#${colors.iconColor}"><path d="${repoIcon}"/></svg>
     <text x="22" y="13" fill="#${colors.titleColor}" font-size="${fontSize.value}" font-family="${fontFamily}" font-weight="600">${escapeXml(titleText)}</text>
   </g>
