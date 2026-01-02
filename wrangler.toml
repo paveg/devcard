@@ -1,15 +1,47 @@
 name = "devcard"
 main = "src/index.ts"
 compatibility_date = "2025-07-18"
+compatibility_flags = ["nodejs_compat"]
 
+# ============================================
+# Observability Settings
+# ============================================
+[observability]
+enabled = true
+
+# Logs configuration - enables Workers Logs in Cloudflare Dashboard
+[observability.logs]
+enabled = true
+# Sample rate: 1.0 = 100% of requests logged (adjust for high-traffic)
+head_sampling_rate = 1.0
+# Invocation logs capture console.log output
+invocation_logs = true
+
+# ============================================
+# Static Assets
+# ============================================
 [assets]
 directory = "./dist"
 
+# ============================================
+# Environment Variables
+# ============================================
 [vars]
 # Set your GitHub token as a secret: wrangler secret put GITHUB_TOKEN
 # GITHUB_TOKEN = ""
+LOG_LEVEL = "info"
 
+# ============================================
+# KV Namespaces
+# ============================================
 [[kv_namespaces]]
 binding = "CACHE"
 id = "ee1f8586ea9e4fcfa28b82870a1a3550"
 preview_id = "607a7597605c4984aae071103c16a817"
+
+# ============================================
+# Analytics Engine (for metrics and observability)
+# ============================================
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "devcard_metrics"

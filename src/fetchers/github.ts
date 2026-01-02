@@ -1,7 +1,47 @@
 import type { Env, GitHubRepo, GitHubUser, LanguageEdge, LanguageStats, UserStats } from '../types';
 import { calculateRank } from '../utils';
+import type { Observability } from '../utils/observability';
 
 const GITHUB_API = 'https://api.github.com/graphql';
+
+interface GitHubApiMetrics {
+  endpoint: string;
+  status: number;
+  duration: number;
+  rateLimitRemaining?: number;
+  rateLimitReset?: number;
+}
+
+let observabilityInstance: Observability | null = null;
+
+export function setObservability(obs: Observability): void {
+  observabilityInstance = obs;
+}
+
+function recordGitHubMetrics(metrics: GitHubApiMetrics): void {
+  if (observabilityInstance) {
+    observabilityInstance.recordGitHubApiCall(
+      metrics.endpoint,
+      metrics.status,
+      metrics.duration,
+      metrics.rateLimitRemaining
+    );
+  }
+
+  // Always log rate limit warnings
+  if (metrics.rateLimitRemaining !== undefined && metrics.rateLimitRemaining < 100) {
+    console.log(
+      JSON.stringify({
+        level: 'warn',
+        type: 'github_rate_limit',
+        timestamp: new Date().toISOString(),
+        remaining: metrics.rateLimitRemaining,
+        reset: metrics.rateLimitReset,
+        endpoint: metrics.endpoint,
+      })
+    );
+  }
+}
 
 const USER_STATS_QUERY = `
 query userStats($login: String!) {
@@ -81,33 +121,57 @@ query repoInfo($owner: String!, $name: String!) {
 const fetchGitHub = async <T>(
   query: string,
   variables: Record<string, unknown>,
-  token?: string
+  token?: string,
+  endpoint = 'graphql'
 ): Promise<T> => {
   if (!token) {
     throw new Error('GitHub token is required');
   }
 
-  const response = await fetch(GITHUB_API, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-      'User-Agent': 'devcard',
-    },
-    body: JSON.stringify({ query, variables }),
-  });
+  const start = Date.now();
+  let status = 0;
+  let rateLimitRemaining: number | undefined;
+  let rateLimitReset: number | undefined;
 
-  if (!response.ok) {
-    throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+  try {
+    const response = await fetch(GITHUB_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        'User-Agent': 'devcard',
+      },
+      body: JSON.stringify({ query, variables }),
+    });
+
+    status = response.status;
+
+    // Extract rate limit headers
+    rateLimitRemaining =
+      parseInt(response.headers.get('X-RateLimit-Remaining') || '', 10) || undefined;
+    rateLimitReset = parseInt(response.headers.get('X-RateLimit-Reset') || '', 10) || undefined;
+
+    if (!response.ok) {
+      throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = (await response.json()) as { data: T; errors?: Array<{ message: string }> };
+
+    if (data.errors) {
+      throw new Error(`GraphQL error: ${data.errors[0].message}`);
+    }
+
+    return data.data;
+  } finally {
+    const duration = Date.now() - start;
+    recordGitHubMetrics({
+      endpoint,
+      status: status || 0,
+      duration,
+      rateLimitRemaining,
+      rateLimitReset,
+    });
   }
-
-  const data = (await response.json()) as { data: T; errors?: Array<{ message: string }> };
-
-  if (data.errors) {
-    throw new Error(`GraphQL error: ${data.errors[0].message}`);
-  }
-
-  return data.data;
 };
 
 export const fetchUserStats = async (
@@ -118,7 +182,8 @@ export const fetchUserStats = async (
   const data = await fetchGitHub<{ user: GitHubUser }>(
     USER_STATS_QUERY,
     { login: username },
-    env.GITHUB_TOKEN
+    env.GITHUB_TOKEN,
+    'user_stats'
   );
 
   const user = data.user;
@@ -169,7 +234,7 @@ export const fetchTopLanguages = async (
         }>;
       };
     };
-  }>(TOP_LANGUAGES_QUERY, { login: username, first: 100 }, env.GITHUB_TOKEN);
+  }>(TOP_LANGUAGES_QUERY, { login: username, first: 100 }, env.GITHUB_TOKEN, 'top_languages');
 
   if (!data.user) {
     throw new Error(`User "${username}" not found`);
@@ -212,7 +277,8 @@ export const fetchRepo = async (owner: string, name: string, env: Env): Promise<
   const data = await fetchGitHub<{ repository: GitHubRepo }>(
     REPO_QUERY,
     { owner, name },
-    env.GITHUB_TOKEN
+    env.GITHUB_TOKEN,
+    'repo_info'
   );
 
   if (!data.repository) {
