@@ -147,4 +147,5 @@ export interface Theme {
 export interface Env {
   GITHUB_TOKEN?: string;
   CACHE?: KVNamespace;
+  ASSETS: Fetcher;
 }
