@@ -34,8 +34,9 @@ direct-*.html
 *-test.svg
 test-output-*.svg
 test-results-*.md
-*.svg
+/*.svg
 svg-preview.html
+!public/*.svg
 
 # Lighthouse CI
 .lighthouseci/
