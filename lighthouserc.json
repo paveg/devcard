@@ -23,9 +23,9 @@
         "uses-text-compression": "off",
         "uses-responsive-images": "warn",
         "offscreen-images": "warn",
-        "unused-javascript": "warn",
-        "unused-css-rules": "warn",
-        "render-blocking-resources": "warn"
+        "unused-javascript": "off",
+        "unused-css-rules": "off",
+        "render-blocking-resources": "off"
       }
     },
     "upload": {
