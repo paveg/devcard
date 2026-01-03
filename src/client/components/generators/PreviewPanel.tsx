@@ -91,7 +91,7 @@ export const PreviewPanel = memo(function PreviewPanel({ url, alt }: PreviewPane
 
   return (
     <>
-      <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+      <Card className="min-w-0 border-border/50 bg-card/50 backdrop-blur-sm">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg font-semibold tracking-tight">
@@ -110,7 +110,7 @@ export const PreviewPanel = memo(function PreviewPanel({ url, alt }: PreviewPane
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex min-h-[220px] items-center justify-center rounded-xl bg-muted/30 p-4 sm:p-6">
+          <div className="flex min-h-[220px] items-center justify-center overflow-hidden rounded-xl bg-muted/30 p-4 sm:p-6">
             {showEmpty && (
               <div className="flex flex-col items-center gap-3 text-muted-foreground">
                 <ImageIcon className="h-10 w-10 opacity-50" />
