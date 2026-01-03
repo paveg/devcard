@@ -9,13 +9,21 @@ export default defineConfig({
   build: {
     outDir: '../../dist',
     emptyOutDir: true,
+    // Target modern browsers for smaller bundles
+    target: 'es2022',
+    // Enable CSS code splitting
+    cssCodeSplit: true,
+    // Optimize chunk size
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
         manualChunks: {
           // Core React runtime
           'react-vendor': ['react', 'react-dom'],
           // Routing
-          'router': ['react-router-dom'],
+          router: ['react-router-dom'],
+          // Icons (large library, lazy load when needed)
+          icons: ['lucide-react'],
           // UI primitives (Radix UI)
           'radix-ui': [
             '@radix-ui/react-checkbox',
@@ -28,7 +36,9 @@ export default defineConfig({
             '@radix-ui/react-tooltip',
           ],
           // Internationalization
-          'i18n': ['i18next', 'react-i18next'],
+          i18n: ['i18next', 'react-i18next'],
+          // Utilities
+          utils: ['clsx', 'tailwind-merge', 'class-variance-authority'],
         },
       },
     },
