@@ -19,7 +19,7 @@
     <meta property="og:url" content="https://devcard.pavegy.workers.dev/" />
     <meta property="og:title" content="DevCard - GitHub Readme Stats" />
     <meta property="og:description" content="Create stunning GitHub statistics cards for your profile README. Customize your GitHub stats, languages, and pinned repositories with minimal setup." />
-    <meta property="og:image" content="https://devcard.pavegy.workers.dev/og-image.png" />
+    <meta property="og:image" content="https://devcard.pavegy.workers.dev/og-image.svg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="DevCard - GitHub Readme Stats Generator" />
@@ -32,7 +32,7 @@
     <meta name="twitter:url" content="https://devcard.pavegy.workers.dev/" />
     <meta name="twitter:title" content="DevCard - GitHub Readme Stats" />
     <meta name="twitter:description" content="Create stunning GitHub statistics cards for your profile README. Customize your GitHub stats, languages, and pinned repositories with minimal setup." />
-    <meta name="twitter:image" content="https://devcard.pavegy.workers.dev/og-image.png" />
+    <meta name="twitter:image" content="https://devcard.pavegy.workers.dev/og-image.svg" />
     <meta name="twitter:image:alt" content="DevCard - GitHub Readme Stats Generator" />
     <meta name="twitter:creator" content="@devcard" />
 
@@ -124,9 +124,18 @@
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" />
     </noscript>
 
-    <!-- Critical CSS for initial render (prevents FOUT) -->
+    <!-- Critical CSS for initial render (prevents FOUT/CLS) -->
     <style>
-      body { font-family: 'Geist', system-ui, -apple-system, sans-serif; }
+      /* Fallback font metrics matched to Geist to minimize CLS */
+      @font-face {
+        font-family: 'Geist Fallback';
+        src: local('system-ui'), local('-apple-system'), local('BlinkMacSystemFont');
+        size-adjust: 100%;
+        ascent-override: 90%;
+        descent-override: 20%;
+        line-gap-override: 0%;
+      }
+      body { font-family: 'Geist', 'Geist Fallback', system-ui, -apple-system, sans-serif; }
     </style>
 
     <!-- Additional SEO Meta Tags -->
