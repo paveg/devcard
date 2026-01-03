@@ -69,7 +69,8 @@
     "preview": "Preview",
     "previewEmpty": "Enter details to generate preview",
     "previewLoading": "Loading...",
-    "previewError": "Failed to load. Check the username."
+    "previewError": "Failed to load. Check the username.",
+    "fullscreen": "View full size"
   },
   "stats": {
     "title": "Stats Card Generator",

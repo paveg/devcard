@@ -69,7 +69,8 @@
     "preview": "プレビュー",
     "previewEmpty": "詳細を入力してプレビュー",
     "previewLoading": "読み込み中...",
-    "previewError": "読み込み失敗。ユーザー名を確認。"
+    "previewError": "読み込み失敗。ユーザー名を確認。",
+    "fullscreen": "フルサイズで表示"
   },
   "stats": {
     "title": "統計カード作成",
