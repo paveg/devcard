@@ -23,6 +23,8 @@ pnpm-debug.log*
 # Test files
 test-*.html
 test-*.mjs
+*-test.png
+*-screenshot.png
 test-*.js
 preview-*.mjs
 launch-*.mjs
@@ -34,6 +36,9 @@ test-output-*.svg
 test-results-*.md
 *.svg
 svg-preview.html
+
+# Lighthouse CI
+.lighthouseci/
 
 # Playwright
 playwright-report/
