@@ -14,7 +14,7 @@ export async function withCache(
 ): Promise<Response> {
   const cache = new CacheManager(c.env);
   const query = c.req.query();
-  const cacheKey = CacheManager.generateKey(options.type, query);
+  const cacheKey = await CacheManager.generateKey(options.type, query);
 
   // Try to get from cache
   const cached = await cache.get<string>(cacheKey);

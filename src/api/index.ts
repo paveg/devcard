@@ -83,7 +83,7 @@ api.get('/', async (c) => {
   }
 
   const cache = new CacheManager(c.env);
-  const cacheKey = CacheManager.generateKey('stats', query);
+  const cacheKey = await CacheManager.generateKey('stats', query);
   const cacheHeaders = getCacheHeaders(CACHE_TTL_EXPORT.STATS);
 
   const cached = await cache.get<string>(cacheKey);
