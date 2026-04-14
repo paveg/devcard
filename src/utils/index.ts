@@ -87,39 +87,6 @@ export const getColors = (options: CardOptions) => {
   };
 };
 
-// Parse gradient background
-export const parseGradient = (bgColor: string): string => {
-  const parts = bgColor.split(',');
-  if (parts.length < 3) return `#${bgColor}`;
-  return `url(#gradient)`;
-};
-
-export const createGradientDef = (bgColor: string): string => {
-  const parts = bgColor.split(',');
-  if (parts.length < 3) return '';
-
-  const angle = parseInt(parts[0], 10) || 0;
-  const colors = parts.slice(1);
-
-  const rad = (angle * Math.PI) / 180;
-  const x1 = 50 - Math.cos(rad) * 50;
-  const y1 = 50 + Math.sin(rad) * 50;
-  const x2 = 50 + Math.cos(rad) * 50;
-  const y2 = 50 - Math.sin(rad) * 50;
-
-  const stops = colors
-    .map((color, i) => {
-      const percent = (i / (colors.length - 1)) * 100;
-      return `<stop offset="${percent}%" stop-color="#${color.trim()}" />`;
-    })
-    .join('\n      ');
-
-  return `
-    <linearGradient id="gradient" x1="${x1}%" y1="${y1}%" x2="${x2}%" y2="${y2}%">
-      ${stops}
-    </linearGradient>`;
-};
-
 // Measure text width (approximation)
 export const measureText = (text: string, fontSize: number = 14): number => {
   const avgCharWidth = fontSize * 0.7;
