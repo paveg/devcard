@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { type Context, Hono } from 'hono';
 import { createErrorCard } from '../cards/error';
 import { createLanguagesCard } from '../cards/languages';
 import { createRepoCard } from '../cards/repo';
@@ -38,6 +38,27 @@ const parseNumber = (value: string | undefined): number | undefined => {
   return Number.isNaN(num) ? undefined : num;
 };
 
+const SVG_CONTENT_TYPE = 'image/svg+xml';
+const NO_CACHE = 'no-cache, no-store, must-revalidate';
+
+type ApiContext = Context<{ Bindings: Env }>;
+
+const svgResponse = (c: ApiContext, svg: string, cacheControl: string | Headers) => {
+  const headers: Record<string, string> =
+    typeof cacheControl === 'string'
+      ? { 'Content-Type': SVG_CONTENT_TYPE, 'Cache-Control': cacheControl }
+      : { 'Content-Type': SVG_CONTENT_TYPE, ...Object.fromEntries(cacheControl) };
+  return c.body(svg, 200, headers);
+};
+
+// Always respond with a valid SVG so image proxies (GitHub camo)
+// render the failure instead of rejecting the response.
+const errorResponse = (c: ApiContext, error: unknown, title = 'Something went wrong') => {
+  const message =
+    error instanceof Error ? error.message : typeof error === 'string' ? error : 'Unknown error';
+  return svgResponse(c, createErrorCard(message, title), NO_CACHE);
+};
+
 const parseCommonOptions = (query: Record<string, string | undefined>) => ({
   titleColor: query.title_color,
   textColor: query.text_color,
@@ -58,22 +79,16 @@ api.get('/', async (c) => {
   const username = query.username;
 
   if (!username) {
-    return c.body(createErrorCard('Missing username parameter', 'Invalid request'), 200, {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-    });
+    return errorResponse(c, 'Missing username parameter', 'Invalid request');
   }
 
   const cache = new CacheManager(c.env);
   const cacheKey = CacheManager.generateKey('stats', query);
+  const cacheHeaders = getCacheHeaders(CACHE_TTL_EXPORT.STATS);
 
-  // Try to get from cache
   const cached = await cache.get<string>(cacheKey);
   if (cached) {
-    return c.body(cached, 200, {
-      'Content-Type': 'image/svg+xml',
-      ...Object.fromEntries(getCacheHeaders(CACHE_TTL_EXPORT.STATS)),
-    });
+    return svgResponse(c, cached, cacheHeaders);
   }
 
   try {
@@ -92,21 +107,11 @@ api.get('/', async (c) => {
     const stats = await fetchUserStats(username, c.env, options.includeAllCommits);
     const svg = createStatsCard(stats, options);
 
-    // Cache the result
     await cache.set(cacheKey, svg, { ttl: CACHE_TTL_EXPORT.STATS });
 
-    return c.body(svg, 200, {
-      'Content-Type': 'image/svg+xml',
-      ...Object.fromEntries(getCacheHeaders(CACHE_TTL_EXPORT.STATS)),
-    });
+    return svgResponse(c, svg, cacheHeaders);
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    // Return an SVG error card (200) so image proxies like GitHub camo
-    // render a visible error instead of refusing the response.
-    return c.body(createErrorCard(message), 200, {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-    });
+    return errorResponse(c, error);
   }
 });
 
@@ -116,10 +121,7 @@ api.get('/top-langs', async (c) => {
   const username = query.username;
 
   if (!username) {
-    return c.body(createErrorCard('Missing username parameter', 'Invalid request'), 200, {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-    });
+    return errorResponse(c, 'Missing username parameter', 'Invalid request');
   }
 
   try {
@@ -149,18 +151,9 @@ api.get('/top-langs', async (c) => {
 
     const svg = createLanguagesCard(filteredLanguages, options);
 
-    return c.body(svg, 200, {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'public, max-age=86400',
-    });
+    return svgResponse(c, svg, 'public, max-age=86400');
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    // Return an SVG error card (200) so image proxies like GitHub camo
-    // render a visible error instead of refusing the response.
-    return c.body(createErrorCard(message), 200, {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-    });
+    return errorResponse(c, error);
   }
 });
 
@@ -171,10 +164,7 @@ api.get('/pin', async (c) => {
   const repo = query.repo;
 
   if (!username || !repo) {
-    return c.body(createErrorCard('Missing username or repo parameter', 'Invalid request'), 200, {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-    });
+    return errorResponse(c, 'Missing username or repo parameter', 'Invalid request');
   }
 
   try {
@@ -187,18 +177,9 @@ api.get('/pin', async (c) => {
     const repoData = await fetchRepo(username, repo, c.env);
     const svg = createRepoCard(repoData, options);
 
-    return c.body(svg, 200, {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'public, max-age=86400',
-    });
+    return svgResponse(c, svg, 'public, max-age=86400');
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    // Return an SVG error card (200) so image proxies like GitHub camo
-    // render a visible error instead of refusing the response.
-    return c.body(createErrorCard(message), 200, {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-    });
+    return errorResponse(c, error);
   }
 });
 
