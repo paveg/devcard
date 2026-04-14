@@ -65,15 +65,24 @@ export class CacheManager {
     }
   }
 
-  // Generate cache key based on request parameters
-  static generateKey(type: string, params: Record<string, string | undefined>): string {
-    const sortedParams = Object.keys(params)
+  // Hash prevents delimiter-collision attacks across param values
+  static async generateKey(
+    type: string,
+    params: Record<string, string | undefined>
+  ): Promise<string> {
+    const tuples = Object.keys(params)
       .sort()
       .filter((key) => params[key] !== undefined)
-      .map((key) => `${key}:${params[key]}`)
-      .join(',');
+      .map((key) => [key, params[key]]);
 
-    return `devcard:${type}:${sortedParams}`;
+    const encoded = new TextEncoder().encode(JSON.stringify(tuples));
+    const digest = await crypto.subtle.digest('SHA-256', encoded);
+    const hex = Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('')
+      .slice(0, 32);
+
+    return `devcard:${type}:${hex}`;
   }
 }
 
