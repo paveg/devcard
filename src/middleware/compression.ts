@@ -16,8 +16,10 @@ export async function compressionMiddleware(c: Context, next: Next) {
     return;
   }
 
-  // For Cloudflare Workers, compression is automatically handled
-  // But we can add hints for better caching
+  // Cloudflare Workers compresses responses automatically based on
+  // Accept-Encoding; we only hint Vary here. Never declare
+  // Content-Encoding manually — the body is not gzip-encoded by us,
+  // and camo/other proxies reject responses whose declared encoding
+  // doesn't match the actual bytes.
   c.header('Vary', 'Accept-Encoding');
-  c.header('Content-Encoding', 'gzip');
 }
