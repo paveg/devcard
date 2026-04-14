@@ -1,4 +1,5 @@
 import { type Context, Hono } from 'hono';
+import * as v from 'valibot';
 import { createErrorCard } from '../cards/error';
 import { createLanguagesCard } from '../cards/languages';
 import { createRepoCard } from '../cards/repo';
@@ -8,6 +9,7 @@ import type { Env, LanguagesCardOptions, RepoCardOptions, StatsCardOptions } fro
 import { AnalyticsCollector } from '../utils/analytics';
 import { CACHE_TTL_EXPORT, CacheManager, getCacheHeaders } from '../utils/cache';
 import { createObservability } from '../utils/observability';
+import { CustomMetricSchema, FrontendErrorSchema, WebVitalSchema } from './schemas';
 
 const api = new Hono<{ Bindings: Env }>();
 
@@ -32,10 +34,12 @@ const parseArray = (value: string | undefined): string[] => {
     .filter(Boolean);
 };
 
-const parseNumber = (value: string | undefined): number | undefined => {
+const parseNumber = (value: string | undefined, min = 0, max = 2000): number | undefined => {
   if (!value) return undefined;
   const num = parseInt(value, 10);
-  return Number.isNaN(num) ? undefined : num;
+  if (Number.isNaN(num)) return undefined;
+  if (num < min || num > max) return undefined;
+  return num;
 };
 
 const SVG_CONTENT_TYPE = 'image/svg+xml';
@@ -69,7 +73,7 @@ const parseCommonOptions = (query: Record<string, string | undefined>) => ({
   hideTitle: parseBoolean(query.hide_title),
   theme: query.theme,
   locale: query.locale,
-  cardWidth: parseNumber(query.card_width),
+  cardWidth: parseNumber(query.card_width, 0, 1200),
   disableAnimations: parseBoolean(query.disable_animations),
 });
 
@@ -124,12 +128,22 @@ api.get('/top-langs', async (c) => {
     return errorResponse(c, 'Missing username parameter', 'Invalid request');
   }
 
+  // Cache to prevent GitHub token exhaustion from trivial cache bypass
+  const cache = new CacheManager(c.env);
+  const cacheKey = await CacheManager.generateKey('top-langs', query);
+  const cacheHeaders = getCacheHeaders(CACHE_TTL_EXPORT.LANGUAGES);
+
+  const cached = await cache.get<string>(cacheKey);
+  if (cached) {
+    return svgResponse(c, cached, cacheHeaders);
+  }
+
   try {
     const options: LanguagesCardOptions = {
       ...parseCommonOptions(query),
       hide: parseArray(query.hide),
       layout: query.layout as LanguagesCardOptions['layout'],
-      langsCount: parseNumber(query.langs_count) ?? 5,
+      langsCount: parseNumber(query.langs_count, 0, 20) ?? 5,
       excludeRepo: parseArray(query.exclude_repo),
       hideProgress: parseBoolean(query.hide_progress),
       sizeWeight: parseNumber(query.size_weight),
@@ -151,7 +165,9 @@ api.get('/top-langs', async (c) => {
 
     const svg = createLanguagesCard(filteredLanguages, options);
 
-    return svgResponse(c, svg, 'public, max-age=86400');
+    await cache.set(cacheKey, svg, { ttl: CACHE_TTL_EXPORT.LANGUAGES });
+
+    return svgResponse(c, svg, cacheHeaders);
   } catch (error) {
     return errorResponse(c, error);
   }
@@ -167,17 +183,29 @@ api.get('/pin', async (c) => {
     return errorResponse(c, 'Missing username or repo parameter', 'Invalid request');
   }
 
+  // Cache to prevent GitHub token exhaustion from trivial cache bypass
+  const cache = new CacheManager(c.env);
+  const cacheKey = await CacheManager.generateKey('pin', query);
+  const cacheHeaders = getCacheHeaders(CACHE_TTL_EXPORT.REPO);
+
+  const cached = await cache.get<string>(cacheKey);
+  if (cached) {
+    return svgResponse(c, cached, cacheHeaders);
+  }
+
   try {
     const options: RepoCardOptions = {
       ...parseCommonOptions(query),
       showOwner: parseBoolean(query.show_owner),
-      descriptionLinesCount: parseNumber(query.description_lines_count),
+      descriptionLinesCount: parseNumber(query.description_lines_count, 0, 20),
     };
 
     const repoData = await fetchRepo(username, repo, c.env);
     const svg = createRepoCard(repoData, options);
 
-    return svgResponse(c, svg, 'public, max-age=86400');
+    await cache.set(cacheKey, svg, { ttl: CACHE_TTL_EXPORT.REPO });
+
+    return svgResponse(c, svg, cacheHeaders);
   } catch (error) {
     return errorResponse(c, error);
   }
@@ -185,16 +213,23 @@ api.get('/pin', async (c) => {
 
 // Analytics endpoints for frontend observability
 api.post('/analytics/vitals', async (c) => {
+  let parsed: v.InferOutput<typeof WebVitalSchema>;
   try {
     const data = await c.req.json();
+    parsed = v.parse(WebVitalSchema, data);
+  } catch {
+    return c.json({ success: false, error: 'Invalid payload' }, 400);
+  }
+
+  try {
     const analytics = new AnalyticsCollector(c.env);
 
     await analytics.recordWebVital({
-      name: data.name,
-      value: data.value,
-      rating: data.rating,
-      page: data.page,
-      timestamp: data.timestamp,
+      name: parsed.name,
+      value: parsed.value,
+      rating: parsed.rating,
+      page: parsed.page,
+      timestamp: parsed.timestamp,
       userAgent: c.req.header('User-Agent'),
       country: c.req.header('CF-IPCountry'),
     });
@@ -207,17 +242,24 @@ api.post('/analytics/vitals', async (c) => {
 });
 
 api.post('/analytics/error', async (c) => {
+  let parsed: v.InferOutput<typeof FrontendErrorSchema>;
   try {
     const data = await c.req.json();
+    parsed = v.parse(FrontendErrorSchema, data);
+  } catch {
+    return c.json({ success: false, error: 'Invalid payload' }, 400);
+  }
+
+  try {
     const analytics = new AnalyticsCollector(c.env);
 
     await analytics.recordError({
-      message: data.message,
-      stack: data.stack,
-      componentStack: data.componentStack,
-      page: data.page,
-      userAgent: data.userAgent,
-      timestamp: data.timestamp,
+      message: parsed.message,
+      stack: parsed.stack,
+      componentStack: parsed.componentStack,
+      page: parsed.page,
+      userAgent: parsed.userAgent,
+      timestamp: parsed.timestamp,
       ip: c.req.header('CF-Connecting-IP'),
       country: c.req.header('CF-IPCountry'),
     });
@@ -230,15 +272,22 @@ api.post('/analytics/error', async (c) => {
 });
 
 api.post('/analytics/custom', async (c) => {
+  let parsed: v.InferOutput<typeof CustomMetricSchema>;
   try {
     const data = await c.req.json();
+    parsed = v.parse(CustomMetricSchema, data);
+  } catch {
+    return c.json({ success: false, error: 'Invalid payload' }, 400);
+  }
+
+  try {
     const analytics = new AnalyticsCollector(c.env);
 
     await analytics.recordCustomMetric({
-      name: data.name,
-      value: data.value,
-      metadata: data.metadata,
-      timestamp: data.timestamp,
+      name: parsed.name,
+      value: parsed.value,
+      metadata: parsed.metadata,
+      timestamp: parsed.timestamp,
     });
 
     return c.json({ success: true }, 200);

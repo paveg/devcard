@@ -21,7 +21,8 @@ export async function rateLimitMiddleware(c: Context<{ Bindings: Env }>, next: N
     return next();
   }
 
-  const ip = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For') || 'unknown';
+  // X-Forwarded-For is attacker-controlled in Workers; trust only CF-Connecting-IP
+  const ip = c.req.header('CF-Connecting-IP') || 'unknown';
   const username = c.req.query('username');
 
   // Check IP rate limit
