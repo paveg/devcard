@@ -11,6 +11,19 @@ interface CodeOutputProps {
 
 const PRODUCTION_BASE_URL = 'https://devcard.pavegy.workers.dev';
 
+// Prevent copy-paste XSS when alt text flows into a README's HTML attribute context.
+const escapeHtmlAttr = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+// Prevent alt text from breaking out of the markdown link-text brackets.
+const escapeMarkdownAlt = (value: string) =>
+  value.replace(/\\/g, '\\\\').replace(/\[/g, '\\[').replace(/\]/g, '\\]').replace(/\r?\n/g, ' ');
+
 export const CodeOutput = memo(function CodeOutput({ url, alt }: CodeOutputProps) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
@@ -25,8 +38,8 @@ export const CodeOutput = memo(function CodeOutput({ url, alt }: CodeOutputProps
   // Memoize all code formats
   const codes = useMemo(
     () => ({
-      markdown: `![${alt}](${fullUrl})`,
-      html: `<img src="${fullUrl}" alt="${alt}" />`,
+      markdown: `![${escapeMarkdownAlt(alt)}](${fullUrl})`,
+      html: `<img src="${fullUrl}" alt="${escapeHtmlAttr(alt)}" />`,
       url: fullUrl,
     }),
     [alt, fullUrl]
