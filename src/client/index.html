@@ -117,12 +117,33 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- Non-blocking font loading with preload + async pattern -->
-    <!-- Optimized: Geist Mono reduced to 400 only (used in code blocks) -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+    <!-- Latin fonts: always loaded (Geist + Geist Mono 400 only) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap" media="print" onload="this.media='all'" />
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400&display=swap" />
     </noscript>
+
+    <!-- Japanese font: conditionally loaded only when UI language is Japanese -->
+    <!-- Must mirror the locale detection in src/client/i18n/index.ts -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('devcard-locale');
+          var browser = (navigator.language || 'en').split('-')[0];
+          var lang = saved || (browser === 'ja' ? 'ja' : 'en');
+          if (lang !== 'ja') return;
+          var href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap';
+          var link = document.createElement('link');
+          link.id = 'noto-sans-jp-font';
+          link.rel = 'stylesheet';
+          link.href = href;
+          link.media = 'print';
+          link.onload = function () { this.media = 'all'; };
+          document.head.appendChild(link);
+        } catch (e) {}
+      })();
+    </script>
 
     <!-- Critical CSS for initial render (prevents FOUT/CLS) -->
     <style>

@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { createErrorCard } from '../cards/error';
 import { createLanguagesCard } from '../cards/languages';
 import { createRepoCard } from '../cards/repo';
 import { createStatsCard } from '../cards/stats';
@@ -57,7 +58,10 @@ api.get('/', async (c) => {
   const username = query.username;
 
   if (!username) {
-    return c.text('Missing username parameter', 400);
+    return c.body(createErrorCard('Missing username parameter', 'Invalid request'), 200, {
+      'Content-Type': 'image/svg+xml',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    });
   }
 
   const cache = new CacheManager(c.env);
@@ -97,7 +101,12 @@ api.get('/', async (c) => {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    return c.text(`Error: ${message}`, 500);
+    // Return an SVG error card (200) so image proxies like GitHub camo
+    // render a visible error instead of refusing the response.
+    return c.body(createErrorCard(message), 200, {
+      'Content-Type': 'image/svg+xml',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    });
   }
 });
 
@@ -107,7 +116,10 @@ api.get('/top-langs', async (c) => {
   const username = query.username;
 
   if (!username) {
-    return c.text('Missing username parameter', 400);
+    return c.body(createErrorCard('Missing username parameter', 'Invalid request'), 200, {
+      'Content-Type': 'image/svg+xml',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    });
   }
 
   try {
@@ -143,7 +155,12 @@ api.get('/top-langs', async (c) => {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    return c.text(`Error: ${message}`, 500);
+    // Return an SVG error card (200) so image proxies like GitHub camo
+    // render a visible error instead of refusing the response.
+    return c.body(createErrorCard(message), 200, {
+      'Content-Type': 'image/svg+xml',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    });
   }
 });
 
@@ -154,7 +171,10 @@ api.get('/pin', async (c) => {
   const repo = query.repo;
 
   if (!username || !repo) {
-    return c.text('Missing username or repo parameter', 400);
+    return c.body(createErrorCard('Missing username or repo parameter', 'Invalid request'), 200, {
+      'Content-Type': 'image/svg+xml',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    });
   }
 
   try {
@@ -173,7 +193,12 @@ api.get('/pin', async (c) => {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    return c.text(`Error: ${message}`, 500);
+    // Return an SVG error card (200) so image proxies like GitHub camo
+    // render a visible error instead of refusing the response.
+    return c.body(createErrorCard(message), 200, {
+      'Content-Type': 'image/svg+xml',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    });
   }
 });
 
